@@ -9,9 +9,33 @@
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.bootstrap.html
  */
 
+var request = require('request');
+
 module.exports.bootstrap = function(cb) {
+
+  Entry.create([{
+    name: 'Terry'
+  }, {
+    name: 'Bobby'
+  }, {
+    name: 'Jamie'
+  }, {
+    name: 'Navid'
+  }, {
+    name: 'Loreto'
+  }, {
+    name: 'Dave'
+  }]).exec(function() {
+    request('https://www.kimonolabs.com/api/24yxvxeo?apikey=abe6b22285a4d123b8d3ed875ac78331', function(err, response, body) {
+      var players = JSON.parse(body).results.players;
+
+      Player.create(players).exec(function() {
+        cb();
+      });
+    });
+  });
 
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-  cb();
+  // cb();
 };

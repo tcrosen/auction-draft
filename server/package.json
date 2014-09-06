@@ -33,5 +33,8 @@
     "url": "git://github.com/terry/server.git"
   },
   "author": "terry",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "request": "^2.42.0"
+  }
 }

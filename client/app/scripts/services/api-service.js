@@ -19,6 +19,10 @@ angular.module('clientApp').factory('API', function($http, ENV) {
     return $http.get(this.url).then(onSuccess, onError);
   };
 
+  API.prototype.getById = function(id) {
+    return $http.get(this.url + '/' + id).then(onSuccess, onError);
+  };
+
   API.prototype.post = function(requestData) {
     return $http.post(this.url, requestData).then(onSuccess, onError);
   };

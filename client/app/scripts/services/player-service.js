@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clientApp').factory('PlayerService', function($http, API) {
+angular.module('clientApp').factory('PlayerService', function(API) {
   var playerService = {};
 
   playerService._api = new API('/players');

@@ -1,0 +1,5 @@
+<ul class="draft-order">
+  <li ng-repeat="entry in entries" ng-class="{ 'bg-warning': draft.currentAuction().entryId === entry.id }">
+    {{ entry.name }}
+  </li>
+</ul>

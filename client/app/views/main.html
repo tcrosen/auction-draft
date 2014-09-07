@@ -45,9 +45,35 @@
         <h3 class="panel-title">On The Block</h3>
       </div>
       <div class="panel-body">
-        <h3>{{ draft.currentAuction.player.name }}</h3>
-        <p>Nominated by: <strong>{{ draft.currentAuction.entry.name }}</strong></p>
-        <p>Highest bid: <strong>${{ draft.currentAuction.highestBid().amount }}</strong> by <strong>{{ draft.currentAuction.highestBid().entry.name }}</strong></p>
+        <div class="row">
+          <div class="col-xs-12">
+            <h3>{{ draft.currentAuction.player.name }}</h3>
+          </div>
+          <div class="col-xs-6 col-lg-6">
+            <p>Nominated by: <strong>{{ draft.currentAuction.entry.name }}</strong></p>
+            <p>Highest bid: <strong>${{ draft.currentAuction.highestBid().amount }}</strong> by <strong>{{ draft.currentAuction.highestBid().entry.name }}</strong></p>
+          </div>
+          <div class="col-xs-12 col-lg-6 bid-actions">
+            <p>
+              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 1}}</a>
+              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 2}}</a>
+              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 3}}</a>
+              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 4}}</a>
+              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 5}}</a>
+              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 10}}</a>
+              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 15}}</a>
+              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 20}}</a>
+              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 50}}</a>
+            </p>
+            <div class="input-group">
+              <span class="input-group-addon">$</span>
+              <input type="text" class="form-control">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button">Submit Bid</button>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

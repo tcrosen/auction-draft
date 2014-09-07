@@ -20,6 +20,7 @@ angular.module('clientApp')
     };
 
     var api = {
+      base: 'http://localhost:1337',
       entries: 'http://localhost:1337/v1/entries',
       draft: 'http://localhost:1337/v1/draft',
       players: 'http://localhost:1337/v1/players'

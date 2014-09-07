@@ -1,5 +1,35 @@
-<strong>{{ grid.data.length }}</strong> players found
-
+<div class="row">
+  <div class="col-xs-2">
+    Total players: <strong>{{ grid.stats.total }}</strong>
+  </div>
+</div>
+<div class="row">
+  <table class="table">
+    <thead>
+      <tr>
+        <th colspan="6">Remaining</th>
+      </tr>
+      <tr>
+        <th>C</th>
+        <th>LW</th>
+        <th>RW</th>
+        <th>D</th>
+        <th>G</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ draftStats().remaining.c }}</td>
+        <td>{{ draftStats().remaining.lw }}</td>
+        <td>{{ draftStats().remaining.rw }}</td>
+        <td>{{ draftStats().remaining.d }}</td>
+        <td>{{ draftStats().remaining.g }}</td>
+        <td>{{ draftStats().remaining.total }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 <table class="table table-striped">
   <thead>
     <tr>

@@ -14,17 +14,23 @@ var fs = require('fs');
 module.exports.bootstrap = function(cb) {
 
   Entry.create([{
-    name: 'Terry'
+    name: 'Terry',
+    players: []
   }, {
-    name: 'Bobby'
+    name: 'Bobby',
+    players: []
   }, {
-    name: 'Jamie'
+    name: 'Jamie',
+    players: []
   }, {
-    name: 'Navid'
+    name: 'Navid',
+    players: []
   }, {
-    name: 'Loreto'
+    name: 'Loreto',
+    players: []
   }, {
-    name: 'Dave'
+    name: 'Dave',
+    players: []
   }]).exec(function() {
     Player.find().exec(function(err, players) {
       var seedFile = __dirname + '/seed/players.json';

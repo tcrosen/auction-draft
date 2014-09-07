@@ -9,6 +9,7 @@ module.exports = {
       player.lastName = player.name.replace(player.firstName, '').trim();
       player.averageDraftRank = parseFloat(player.rank);
       player.rank = i;
+      player.drafted = false;      
       i++;
       return player;
     });

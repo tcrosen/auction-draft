@@ -30,6 +30,22 @@
 
 <div class="row">
   <div class="col-xs-12">
+    <div class="panel panel-info" ng-show="currentAuction.player">
+      <div class="panel-heading">
+        <h3 class="panel-title">On The Block</h3>
+      </div>
+      <div class="panel-body">
+        <h3>{{ currentAuction.player.name }}</h3>
+        <p>Nominated by: <strong>{{ currentAuction.nominatedBy.name }}</strong></p>
+        <p>Time remaining: <strong>{{ currentAuction.timeremaining / 1000 }}</strong></p>
+        <p>Highest bid: <strong>${{ currentAuction.highestBid.amount }}</strong> by <strong>{{ currentAuction.highestBid.entry.name }}</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -42,13 +58,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="player in grid.data | orderBy:grid.sort:grid.reverse track by player.id">
+        <tr ng-hide="grid.hideDrafted && player.owner"
+            ng-repeat="player in grid.data | orderBy:grid.sort:grid.reverse track by player.id"
+            ng-class="{ info: currentAuction.player.id === player.id }">
           <td>{{ player.rank }}</td>
           <td>{{ player.lastName }}, {{ player.firstName }}</td>
           <td>{{ player.position }}</td>
           <td>{{ player.team }}</td>
           <td>{{ player.owner.name }}</td>
-          <td><a href="" ng-click="draftPlayer(currentEntry, player)">Draft</a></td>
+          <td><a href="" ng-show="!player.owner" ng-click="nominatePlayer(currentEntry, player, 1)">Nominate</a></td>
         </tr>
       </tbody>
     </table>

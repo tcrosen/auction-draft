@@ -8,7 +8,16 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('MainCtrl', function ($scope, $http) {
+  .controller('MainCtrl', function ($scope, $http, $interval) {
+
+    var auctionTime;
+
+    $scope.currentAuction = {};
+
+    $scope.draftSettings = {
+      maxAuctionTime: 20000,
+      minBid: 1
+    };
 
     var api = {
       entries: 'http://localhost:1337/v1/entries',
@@ -28,7 +37,8 @@ angular.module('clientApp')
         $scope.grid = {
           data: resp.data,
           sort: 'rank',
-          reverse: false
+          reverse: false,
+          hideDrafted: false
         };
 
         $scope.draftStats = function() {
@@ -61,6 +71,35 @@ angular.module('clientApp')
       });
     }
 
+    $scope.nominatePlayer = function(entry, player, bid) {
+      angular.extend($scope.currentAuction, {
+        nominatedBy: entry,
+        player: player,
+        bids: [{
+          amount: bid,
+          entry: entry
+        }]
+      });
+
+      $scope.currentAuction.highestBid =  $scope.currentAuction.bids[0];
+      $scope.currentAuction.timeremaining = $scope.draftSettings.maxAuctionTime;
+
+      auctionTime = $interval(function() {
+        if ($scope.currentAuction.timeremaining > 0) {
+          $scope.currentAuction.timeremaining -= 1000;
+        } else {
+          $scope.endAuction();
+        }
+      }, 1000);
+    };
+
+    $scope.endAuction = function() {
+      if (angular.isDefined(auctionTime)) {
+        $interval.cancel(auctionTime);
+        auctionTime = undefined;
+      }
+    };
+
     $scope.sortPlayers = function(col) {
       if (col === $scope.grid.sort) {
         $scope.grid.reverse = !$scope.grid.reverse;
@@ -76,6 +115,11 @@ angular.module('clientApp')
         getPlayers();
       });
     };
+
+    $scope.$on('$destroy', function() {
+      // Make sure that the interval is destroyed too
+      $scope.endAuction();
+    });
 
     getEntries();
     getPlayers();

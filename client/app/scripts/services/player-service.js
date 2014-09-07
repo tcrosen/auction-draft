@@ -5,23 +5,31 @@ angular.module('clientApp').factory('PlayerService', function($http, API) {
 
   playerService._api = new API('/players');
 
-  playerService.getPlayers = function() {
+  playerService.fetch = function() {
     return playerService._api.get();
   };
 
-  playerService.getUndrafted = function() {
-    return playerService.getPlayers().then(function(players) {
-      return _.filter(players, function(player) {
-        return !player.owner;
-      });
+  playerService.getByDrafted = function(isDrafted) {
+    return playerService.fetch().then(function(players) {
+      return playerService.filterByDrafted(players, isDrafted);
     });
   };
 
-  playerService.getPlayersByPosition = function(position) {
-    return playerService.getPlayers().then(function(players) {
-      return _.where(players, function(player) {
-        return player.positions.indexOf(position) >= 0;
-      });
+  playerService.getByPosition = function(position) {
+    return playerService.fetch().then(function(players) {
+      return playerService.filterByPosition(players, position);
+    });
+  };
+
+  playerService.filterByPosition = function(players, position) {
+    return _.where(players, function(player) {
+      return player.positions.indexOf(position) >= 0;
+    });
+  };
+
+  playerService.filterByDrafted = function(players, isDrafted) {
+    return _.filter(players, function(player) {
+      return isDrafted ? player.owner : !player.owner;
     });
   };
 

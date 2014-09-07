@@ -41,7 +41,7 @@ angular.module('clientApp')
     }
 
     function getPlayers() {
-      PlayerService.getPlayers().then(function(players) {
+      PlayerService.fetch().then(function(players) {
         $scope.grid = {
           data: players,
           sort: 'rank',
@@ -51,31 +51,20 @@ angular.module('clientApp')
 
         $scope.draftStats = function() {
           var players = $scope.grid.data,
-            undrafted = getUndrafted(players);
+            undrafted = PlayerService.filterByDrafted(players, false),
+            byPosition = PlayerService.filterByPosition;
 
           return {
             remaining: {
               total: undrafted.length,
-              c: playersByPosition(undrafted, 'C').length,
-              lw: playersByPosition(undrafted, 'LW').length,
-              rw: playersByPosition(undrafted, 'RW').length,
-              d: playersByPosition(undrafted, 'D').length,
-              g: playersByPosition(undrafted, 'G').length
+              c: byPosition(undrafted, 'C').length,
+              lw: byPosition(undrafted, 'LW').length,
+              rw: byPosition(undrafted, 'RW').length,
+              d: byPosition(undrafted, 'D').length,
+              g: byPosition(undrafted, 'G').length
             }
           };
         };
-      });
-    }
-
-    function getUndrafted(players) {
-      return _.filter(players, function(player) {
-        return !player.owner;
-      });
-    }
-
-    function playersByPosition(players, position) {
-      return _.where(players, function(player) {
-        return player.positions.indexOf(position) >= 0;
       });
     }
 

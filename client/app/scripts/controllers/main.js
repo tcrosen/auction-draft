@@ -10,36 +10,49 @@
 angular.module('clientApp')
   .controller('MainCtrl', function ($scope, $http) {
 
-    $http.get('http://localhost:1337/v1/entries').then(function(resp) {
-      $scope.entries = resp.data;
-    });
+    var api = {
+      entries: 'http://localhost:1337/v1/entries',
+      draft: 'http://localhost:1337/v1/draft',
+      players: 'http://localhost:1337/v1/players'
+    };
 
-    $http.get('http://localhost:1337/v1/players?limit=0').then(function(resp) {
-      $scope.grid = {
-        data: resp.data,
-        sort: 'rank',
-        reverse: false
-      };
+    function getEntries() {
+      $http.get(api.entries).then(function(resp) {
+        $scope.entries = resp.data;
+        $scope.currentEntry = resp.data[0];
+      });
+    }
 
-      $scope.draftStats = function() {
-        var players = $scope.grid.data,
-          undrafted = getUndrafted(players);
-
-        return {
-          remaining: {
-            total: undrafted.length,
-            c: playersByPosition(undrafted, 'C').length,
-            lw: playersByPosition(undrafted, 'LW').length,
-            rw: playersByPosition(undrafted, 'RW').length,
-            d: playersByPosition(undrafted, 'D').length,
-            g: playersByPosition(undrafted, 'G').length
-          }
+    function getPlayers() {
+      $http.get(api.players).then(function(resp) {
+        $scope.grid = {
+          data: resp.data,
+          sort: 'rank',
+          reverse: false
         };
-      };
-    });
+
+        $scope.draftStats = function() {
+          var players = $scope.grid.data,
+            undrafted = getUndrafted(players);
+
+          return {
+            remaining: {
+              total: undrafted.length,
+              c: playersByPosition(undrafted, 'C').length,
+              lw: playersByPosition(undrafted, 'LW').length,
+              rw: playersByPosition(undrafted, 'RW').length,
+              d: playersByPosition(undrafted, 'D').length,
+              g: playersByPosition(undrafted, 'G').length
+            }
+          };
+        };
+      });
+    }
 
     function getUndrafted(players) {
-      return _.filter(players, { drafted: false });
+      return _.filter(players, function(player) {
+        return !player.owner;
+      });
     }
 
     function playersByPosition(players, position) {
@@ -55,7 +68,15 @@ angular.module('clientApp')
         $scope.grid.sort = col;
         $scope.grid.reverse = false;
       }
-
-      console.log($scope.grid);
     };
+
+    $scope.draftPlayer = function(entry, player) {
+      $http.post(api.draft, { entry: entry, player: player }).then(function(resp) {
+        console.log(resp);
+        getPlayers();
+      });
+    };
+
+    getEntries();
+    getPlayers();
   });

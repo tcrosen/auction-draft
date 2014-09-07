@@ -1,50 +1,56 @@
 <div class="row">
-  <div class="col-xs-2">
-    Total players: <strong>{{ grid.stats.total }}</strong>
+  <div class="col-xs-12">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th colspan="6">Players Remaining</th>
+        </tr>
+        <tr>
+          <th>C</th>
+          <th>LW</th>
+          <th>RW</th>
+          <th>D</th>
+          <th>G</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ draftStats().remaining.c }}</td>
+          <td>{{ draftStats().remaining.lw }}</td>
+          <td>{{ draftStats().remaining.rw }}</td>
+          <td>{{ draftStats().remaining.d }}</td>
+          <td>{{ draftStats().remaining.g }}</td>
+          <td>{{ draftStats().remaining.total }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
+
 <div class="row">
-  <table class="table">
-    <thead>
-      <tr>
-        <th colspan="6">Remaining</th>
-      </tr>
-      <tr>
-        <th>C</th>
-        <th>LW</th>
-        <th>RW</th>
-        <th>D</th>
-        <th>G</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>{{ draftStats().remaining.c }}</td>
-        <td>{{ draftStats().remaining.lw }}</td>
-        <td>{{ draftStats().remaining.rw }}</td>
-        <td>{{ draftStats().remaining.d }}</td>
-        <td>{{ draftStats().remaining.g }}</td>
-        <td>{{ draftStats().remaining.total }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="col-xs-12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><a href="" ng-click="sortPlayers('rank')">Rank</a></th>
+          <th><a href="" ng-click="sortPlayers('lastName')">Name</a></th>
+          <th><a href="" ng-click="sortPlayers('position')">Position</a></th>
+          <th><a href="" ng-click="sortPlayers('team')">Team</a></th>
+          <th>Drafted By</th>
+          <th>Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="player in grid.data | orderBy:grid.sort:grid.reverse track by player.id">
+          <td>{{ player.rank }}</td>
+          <td>{{ player.lastName }}, {{ player.firstName }}</td>
+          <td>{{ player.position }}</td>
+          <td>{{ player.team }}</td>
+          <td>{{ player.owner.name }}</td>
+          <td><a href="" ng-click="draftPlayer(currentEntry, player)">Draft</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><a href="" ng-click="sortPlayers('rank')">Rank</a></th>
-      <th><a href="" ng-click="sortPlayers('lastName')">Name</a></th>
-      <th><a href="" ng-click="sortPlayers('position')">Position</a></th>
-      <th><a href="" ng-click="sortPlayers('team')">Team</a></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="player in grid.data | orderBy:grid.sort:grid.reverse track by player.id">
-      <td>{{ player.rank }}</td>
-      <td>{{ player.lastName }}, {{ player.firstName }}</td>
-      <td>{{ player.position }}</td>
-      <td>{{ player.team }}</td>
-    </tr>
-  </tbody>
-</table>

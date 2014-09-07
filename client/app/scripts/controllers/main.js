@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('MainCtrl', function ($scope, $http, $interval, $firebase) {
+  .controller('MainCtrl', function ($scope, $http, $interval, $firebase, PlayerService) {
 
     var auctionTime;
     var ref = new Firebase('https://auction-draft.firebaseio.com');
@@ -34,14 +34,16 @@ angular.module('clientApp')
 
         var entriesRef = ref.child('entries');
         var entriesSync = $firebase(entriesRef);
-        entriesSync.$set($scope.entries);
+        _.each($scope.entries, function(entry) {
+          entriesSync.$set(entry.name, entry);
+        });
       });
     }
 
     function getPlayers() {
-      $http.get(api.players).then(function(resp) {
+      PlayerService.getPlayers().then(function(players) {
         $scope.grid = {
-          data: resp.data,
+          data: players,
           sort: 'rank',
           reverse: false,
           hideDrafted: false

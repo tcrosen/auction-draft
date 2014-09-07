@@ -23,8 +23,12 @@ angular
       .when('/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
-      })      
+      })
       .otherwise({
         redirectTo: '/'
       });
+  })
+  .constant('ENV', {
+    apiRoot: 'http://localhost:1337/v1',
+    firebaseRef: new Firebase('https://auction-draft.firebaseio.com')
   });

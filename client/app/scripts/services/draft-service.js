@@ -5,6 +5,8 @@ angular.module('clientApp').factory('DraftService', function(API) {
 
   draftService._api = new API('/draft');
 
+  draftService.startTime = new Date();
+
   draftService.currentAuction = {
     bids: [],
 
@@ -12,7 +14,7 @@ angular.module('clientApp').factory('DraftService', function(API) {
       return _.max(draftService.currentAuction.bids, 'amount');
     },
 
-    addBid: function(entryId, amount) {
+    addBid: function(entry, amount) {
       draftService.currentAuction.bids.push({
         entry: entry,
         amount: amount
@@ -38,7 +40,11 @@ angular.module('clientApp').factory('DraftService', function(API) {
   };
 
   draftService.draftPlayer = function(entry, player) {
-    draftService._api.post({ entry: entry, player: player });
+    return draftService._api.post({ entry: entry, player: player }).then(function(draftResult) {
+      draftService.currentAuction.player = null;
+      draftService.currentAuction.entry = null;
+      return draftResult;
+    });
   };
 
   draftService.nominatePlayer = function(entry, player, amount) {
@@ -51,7 +57,7 @@ angular.module('clientApp').factory('DraftService', function(API) {
       startTime: new Date()
     });
 
-    draftService.currentAuction.addBid(entry.id, amount);
+    draftService.currentAuction.addBid(entry, amount);
   };
 
   return draftService;

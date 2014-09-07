@@ -1,5 +1,10 @@
 <div class="row">
   <div class="col-xs-12">
+    <a href="" class="btn btn-primary" ng-click="startDraft()">Start Draft</a>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
     <div draft-order></div>
   </div>
 </div>
@@ -59,6 +64,7 @@
           <th><a href="" ng-click="sortPlayers('team')">Team</a></th>
           <th>Drafted By</th>
           <th>Cost</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -70,7 +76,8 @@
           <td>{{ player.position }}</td>
           <td>{{ player.team }}</td>
           <td>{{ player.owner.name }}</td>
-          <td><a href="" ng-show="!player.owner && draft.currentAuction.player.id !== player.id" ng-click="nominatePlayer(player.id)">Nominate</a></td>
+          <td></td>
+          <td><a href="" class="btn btn-primary btn-sm" ng-show="showNominate(player)" ng-click="nominatePlayer(player)">Nominate</a></td>
         </tr>
       </tbody>
     </table>

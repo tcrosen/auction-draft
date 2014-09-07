@@ -15,7 +15,6 @@ angular.module('clientApp')
     function getEntries() {
       EntryService.fetch().then(function(entries) {
         $scope.entries = entries;
-        $scope.currentEntry = entries[0];
 
         var entriesRef = ref.child('entries');
         var entriesSync = $firebase(entriesRef);
@@ -57,7 +56,7 @@ angular.module('clientApp')
 
     $scope.nominatePlayer = function(player) {
       // TODO: Set based on logged in user
-      var entryId = $scope.entries[0];
+      var entry = $scope.entries[0];
 
       $scope.draft.nominatePlayer(entry, player);
     };
@@ -81,5 +80,15 @@ angular.module('clientApp')
     getEntries();
     getPlayers();
 
-    $scope.draft = DraftService;
+    $scope.startDraft = function() {
+      $scope.draft = DraftService;
+      $scope.draft.currentAuction.entry = $scope.entries[0];
+    };
+
+    $scope.showNominate = function(player) {
+      return $scope.draft &&
+            !$scope.draft.currentAuction.player &&
+            !player.owner;
+    };
+
   });

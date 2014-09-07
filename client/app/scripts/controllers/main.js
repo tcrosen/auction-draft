@@ -8,9 +8,10 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('MainCtrl', function ($scope, $http, $interval) {
+  .controller('MainCtrl', function ($scope, $http, $interval, $firebase) {
 
     var auctionTime;
+    var ref = new Firebase('https://auction-draft.firebaseio.com');
 
     $scope.currentAuction = {};
 
@@ -30,6 +31,10 @@ angular.module('clientApp')
       $http.get(api.entries).then(function(resp) {
         $scope.entries = resp.data;
         $scope.currentEntry = resp.data[0];
+
+        var entriesRef = ref.child('entries');
+        var entriesSync = $firebase(entriesRef);
+        entriesSync.$set($scope.entries);
       });
     }
 

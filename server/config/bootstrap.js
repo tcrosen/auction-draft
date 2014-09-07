@@ -40,7 +40,6 @@ module.exports.bootstrap = function(cb) {
         cb();
       }
     })
-
   });
 
   // It's very important to trigger this callback method when you are finished

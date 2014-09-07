@@ -1,20 +1,20 @@
-<strong>{{ playerCount }}</strong> players found
+<strong>{{ grid.data.length }}</strong> players found
 
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Rank</th>
-      <th>Name</th>
-      <th>Position</th>
-      <th>Team</th>
+      <th><a href="" ng-click="sortPlayers('rank')">Rank</a></th>
+      <th><a href="" ng-click="sortPlayers('lastName')">Name</a></th>
+      <th><a href="" ng-click="sortPlayers('position')">Position</a></th>
+      <th><a href="" ng-click="sortPlayers('team')">Team</a></th>
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="player in players">
-      <th>{{ player.rank }}</th>
-      <th>{{ player.name }}</th>
-      <th>{{ player.position }}</th>
-      <th>{{ player.team }}</th>
+    <tr ng-repeat="player in grid.data | orderBy:grid.sort:grid.reverse track by player.id">
+      <td>{{ player.rank }}</td>
+      <td>{{ player.lastName }}, {{ player.firstName }}</td>
+      <td>{{ player.position }}</td>
+      <td>{{ player.team }}</td>
     </tr>
   </tbody>
 </table>

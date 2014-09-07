@@ -9,7 +9,7 @@
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.bootstrap.html
  */
 
-var request = require('request');
+var fs = require('fs');
 
 module.exports.bootstrap = function(cb) {
 
@@ -26,13 +26,21 @@ module.exports.bootstrap = function(cb) {
   }, {
     name: 'Dave'
   }]).exec(function() {
-    request('https://www.kimonolabs.com/api/24yxvxeo?apikey=abe6b22285a4d123b8d3ed875ac78331', function(err, response, body) {
-      var players = JSON.parse(body).results.players;
-
-      Player.create(players).exec(function() {
+    Player.find().exec(function(err, players) {
+      var seedFile = __dirname + '/seed/players.json';
+      if (!players || !players.length) {
+        fs.readFile(seedFile, 'utf8', function (err, data) {
+          var players = PlayerService.parseYahooJson(data);
+          Player.create(players).exec(function(err, players) {
+            sails.log(players.length + ' players created from seed file: ' + seedFile);
+            cb();
+          });
+        });
+      } else {
         cb();
-      });
-    });
+      }
+    })
+
   });
 
   // It's very important to trigger this callback method when you are finished

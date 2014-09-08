@@ -32,11 +32,12 @@ angular.module('clientApp')
           data: players,
           sort: 'rank',
           reverse: false,
-          hideDrafted: false
+          hideDrafted: false,
+          filter: null
         };
 
         $scope.draftStats = function() {
-          var players = $scope.grid.data,
+          var players = $scope.players,
             undrafted = PlayerService.filterByDrafted(players, false),
             byPosition = PlayerService.filterByPosition;
 
@@ -75,6 +76,16 @@ angular.module('clientApp')
         console.log(resp);
         getPlayers();
       });
+    };
+
+    $scope.filterPlayers = function(position) {
+      $scope.grid.filter = position;
+
+      if (position) {
+        $scope.grid.data = PlayerService.filterByPosition($scope.players, position);
+      } else {
+        $scope.grid.data = $scope.players;
+      }
     };
 
     getEntries();

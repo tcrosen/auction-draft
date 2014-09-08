@@ -36,3 +36,20 @@ body {
 .draft-order > li:first-child {
   border-left: 1px solid #ddd;
 }
+
+.player-filters {
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+}
+
+.player-filters > li {
+  border-right: 1px solid #ddd;
+}
+
+.player-filters > li > a {
+  border-radius: 0;
+}
+
+.player-filters > li:last-child {
+  border-right: 0;
+}

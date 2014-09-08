@@ -47,6 +47,10 @@ angular.module('clientApp').factory('DraftService', function(API) {
     });
   };
 
+  draftService.randomizeOrder = function() {
+    draftService.entries = _.shuffle(draftService.entries);
+  };
+
   draftService.nominatePlayer = function(entry, player, amount) {
     amount = amount || draftService.settings.startingBid;
 

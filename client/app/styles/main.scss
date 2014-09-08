@@ -43,7 +43,7 @@ body {
 }
 
 .player-filters > li {
-  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 .player-filters > li > a {
@@ -51,5 +51,14 @@ body {
 }
 
 .player-filters > li:last-child {
-  border-right: 0;
+  border-bottom: 0;
+}
+
+.current-auction .player-name {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.btn-quick-bid {
+  margin-right: 2px;
 }

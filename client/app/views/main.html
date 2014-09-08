@@ -1,7 +1,6 @@
 <div class="row">
   <div class="col-xs-12">
-    <a href="" class="btn btn-primary" ng-click="startDraft()">Start Draft</a>
-    <a href="" class="btn btn-primary" ng-click="randomizeOrder()">Randomize Order</a>
+    <a href="" class="btn btn-danger" ng-click="randomizeOrder()">Randomize Order</a>
   </div>
 </div>
 <div class="row">
@@ -12,36 +11,30 @@
 
 <div class="row">
   <div class="col-xs-12">
-    <div class="panel panel-info" ng-show="draft.currentAuction.player">
+    <div class="panel panel-success current-auction" ng-show="draft.currentAuction.player">
       <div class="panel-heading">
         <h3 class="panel-title">Current Auction</h3>
       </div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-xs-12">
-            <h3>{{ draft.currentAuction.player.name }}</h3>
-          </div>
-          <div class="col-xs-6 col-lg-6">
+          <div class="col-xs-6 col-sm-4">
+            <h3 class="player-name">{{ draft.currentAuction.player.name }} <small>{{ draft.currentAuction.player.position }}, {{ draft.currentAuction.player.team }}</small></h3>
             <p>Nominated by: <strong>{{ draft.currentAuction.entry.name }}</strong></p>
             <p>Highest bid: <strong>${{ draft.currentAuction.highestBid().amount }}</strong> by <strong>{{ draft.currentAuction.highestBid().entry.name }}</strong></p>
+            <p><a href="" class="btn btn-danger" ng-click="finishAuction()">Finish</a> <a href="" class="btn btn-default" ng-click="cancelAuction()">Cancel</a></p>
           </div>
-          <div class="col-xs-12 col-lg-6 bid-actions">
+          <div class="col-xs-12 col-sm-8 bid-actions">
             <p>
-              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 1}}</a>
-              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 2}}</a>
-              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 3}}</a>
-              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 4}}</a>
-              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 5}}</a>
-              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 10}}</a>
-              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 15}}</a>
-              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 20}}</a>
-              <a href="" ng-click="submitBid(amount)" class="btn btn-success">${{ draft.currentAuction.highestBid().amount + 50}}</a>
+              <span>Quick Bid:</span>
+            </p>
+            <p>
+              <a href="" ng-click="submitBid(quickBid)" ng-repeat="quickBid in quickBids()" class="btn btn-success btn-quick-bid">${{ quickBid }}</a>
             </p>
             <div class="input-group">
               <span class="input-group-addon">$</span>
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" ng-model="user.bid">
               <span class="input-group-btn">
-                <button class="btn btn-default" type="button">Submit Bid</button>
+                <button class="btn btn-default" type="button" ng-click="submitBid()">Submit Bid</button>
               </span>
             </div>
           </div>
@@ -52,9 +45,8 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-12">
-    <h2>Players</h2>
-    <ul class="nav nav-pills nav-justified player-filters" role="tablist">
+  <div class="col-xs-12 col-sm-3 col-md-2">
+    <ul class="nav nav-pills nav-stacked player-filters" role="tablist">
       <li ng-class="{ active: !grid.filter }"><a href="" ng-click="filterPlayers()">All <span class="badge pull-right">{{ draftStats().remaining.total }}</a></li>
       <li ng-class="{ active: grid.filter === 'C' }"><a href="" ng-click="filterPlayers('C')">Center <span class="badge pull-right">{{ draftStats().remaining.c }}</a></li>
       <li ng-class="{ active: grid.filter === 'RW' }"><a href="" ng-click="filterPlayers('RW')">Right Wing <span class="badge pull-right">{{ draftStats().remaining.rw }}</a></li>
@@ -62,14 +54,16 @@
       <li ng-class="{ active: grid.filter === 'D' }"><a href="" ng-click="filterPlayers('D')">Defense <span class="badge pull-right">{{ draftStats().remaining.d }}</a></li>
       <li ng-class="{ active: grid.filter === 'G' }"><a href="" ng-click="filterPlayers('G')">Goalie <span class="badge pull-right">{{ draftStats().remaining.g }}</a></li>
     </ul>
+  </div>
+  <div class="col-xs-12 col-sm-9 col-md-10">
     <table class="table table-striped">
       <thead>
         <tr>
           <th><a href="" ng-click="sortPlayers('rank')">Rank</a></th>
           <th><a href="" ng-click="sortPlayers('lastName')">Name</a></th>
-          <th><a href="" ng-click="sortPlayers('position')">Position</a></th>
-          <th><a href="" ng-click="sortPlayers('team')">Team</a></th>
-          <th>Drafted By</th>
+          <th class="hidden-xs"><a href="" ng-click="sortPlayers('position')">Position</a></th>
+          <th class="hidden-xs"><a href="" ng-click="sortPlayers('team')">Team</a></th>
+          <th>Owner</th>
           <th>Cost</th>
           <th></th>
         </tr>
@@ -77,14 +71,14 @@
       <tbody>
         <tr ng-hide="grid.hideDrafted && player.owner"
             ng-repeat="player in grid.data | orderBy:grid.sort:grid.reverse track by player.id"
-            ng-class="{ info: draft.currentAuction.player.id === player.id }">
+            ng-class="{ success: draft.currentAuction.player.id === player.id }">
           <td>{{ player.rank }}</td>
           <td>{{ player.lastName }}, {{ player.firstName }}</td>
-          <td>{{ player.position }}</td>
-          <td>{{ player.team }}</td>
+          <td class="hidden-xs">{{ player.position }}</td>
+          <td class="hidden-xs">{{ player.team }}</td>
           <td>{{ player.owner.name }}</td>
           <td></td>
-          <td><a href="" class="btn btn-primary btn-sm" ng-show="showNominate(player)" ng-click="nominatePlayer(player)">Nominate</a></td>
+          <td><a href="" ng-show="showNominate(player)" ng-click="nominatePlayer(player)">Nominate</a></td>
         </tr>
       </tbody>
     </table>

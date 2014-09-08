@@ -13,7 +13,7 @@ angular.module('clientApp')
     var ref = new Firebase('https://auction-draft.firebaseio.com');
 
     function getEntries() {
-      EntryService.fetch().then(function(entries) {
+      return EntryService.fetch().then(function(entries) {
         $scope.entries = entries;
 
         var entriesRef = ref.child('entries');
@@ -21,11 +21,13 @@ angular.module('clientApp')
         _.each($scope.entries, function(entry) {
           entriesSync.$set(entry.name, entry);
         });
+
+        return entries;
       });
     }
 
     function getPlayers() {
-      PlayerService.fetch().then(function(players) {
+      return PlayerService.fetch().then(function(players) {
         $scope.players = players;
 
         $scope.grid = {
@@ -88,12 +90,49 @@ angular.module('clientApp')
       }
     };
 
-    getEntries();
-    getPlayers();
-
-    $scope.startDraft = function() {
+    getEntries().then(function(entries) {
+      getPlayers();
       $scope.draft = DraftService;
-      $scope.draft.currentAuction.entry = $scope.entries[0];
+      $scope.draft.entries = angular.copy(entries);
+      $scope.draft.currentAuction.entry = $scope.draft.entries[0];
+    });
+
+    $scope.randomizeOrder = function() {
+      $scope.draft.randomizeOrder();
+      $scope.draft.currentAuction.entry = $scope.draft.entries[0];
+    };
+
+    $scope.quickBids = function() {
+      var quickBids = [],
+          highestBid,
+          nextTenth,
+          i, j;
+
+      if ($scope.draft && $scope.draft.currentAuction && $scope.draft.currentAuction.highestBid().amount) {
+        highestBid = $scope.draft.currentAuction.highestBid().amount;
+
+        if (highestBid < 50) {
+          for (i = 1; i <= 9; i++) {
+            quickBids.push(highestBid + i);
+          }
+        }
+
+        nextTenth = (highestBid + i) - ((highestBid + i) % 10);
+
+        console.log('next tenth: ', nextTenth);
+        console.log('i: ', i);
+        console.log('highest bid: ', highestBid);
+        // if (nextTenth < highestBid + 15) {
+        //   nextTenth = 20;
+        // }
+
+        for (j = nextTenth; j <= nextTenth + 30; j+=5) {
+          //quickBids.push(j);
+          console.log('j', j);
+        }
+      }
+
+      return quickBids;
     };
 
     $scope.showNominate = function(player) {
@@ -102,4 +141,12 @@ angular.module('clientApp')
             !player.owner;
     };
 
+    $scope.submitBid = function(amount) {
+      var bid = amount || $scope.user.bid;
+
+      // TODO: associate current user and get entry
+      var entry = _.sample($scope.entries);
+
+      $scope.draft.currentAuction.addBid(entry, bid);
+    };
   });

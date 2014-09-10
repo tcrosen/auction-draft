@@ -13,40 +13,66 @@ var fs = require('fs');
 
 module.exports.bootstrap = function(cb) {
 
-  Entry.create([{
-    name: 'Terry',
-    players: []
+  var users = [{
+    name: 'Terry'
   }, {
-    name: 'Bobby',
-    players: []
+    name: 'Bobby'
   }, {
-    name: 'Jamie',
-    players: []
+    name: 'Jamie'
   }, {
-    name: 'Navid',
-    players: []
+    name: 'Navid'
   }, {
-    name: 'Loreto',
-    players: []
+    name: 'Loreto'
   }, {
-    name: 'Dave',
-    players: []
-  }]).exec(function() {
-    Player.find().exec(function(err, players) {
-      var seedFile = __dirname + '/seed/players.json';
-      if (!players || !players.length) {
-        fs.readFile(seedFile, 'utf8', function (err, data) {
-          var players = PlayerService.parseYahooJson(data);
-          Player.create(players).exec(function(err, players) {
-            sails.log(players.length + ' players created from seed file: ' + seedFile);
+    name: 'Dave'
+  }, {
+    name: 'Mike'
+  }, {
+    name: 'George'
+  }];
+
+  User.create(users).then(function(createdUsers) {
+    sails.log('Users created: ', createdUsers);
+
+    Pool.create({
+      name: 'Auction 2014'
+    }).then(function(createdPool) {
+      sails.log('Pool created: ', createdPool);
+
+      var poolTeamsCreated = 0;
+
+      _.each(createdUsers, function(createdUser) {
+
+        PoolTeam.create({
+          pool: createdPool.id,
+          owner: createdUser.id
+        }).then(function(createdPoolTeam) {
+          sails.log('Pool team created: ', createdPoolTeam);
+          poolTeamsCreated++;
+
+          if (poolTeamsCreated >= createdUsers.length) {
             cb();
-          });
+          }
         });
-      } else {
-        cb();
-      }
-    })
+      });
+    });
   });
+
+  // Player.find().exec(function(err, players) {
+  //     var seedFile = __dirname + '/seed/players.json';
+  //     if (!players || !players.length) {
+  //       fs.readFile(seedFile, 'utf8', function (err, data) {
+  //         var players = PlayerService.parseYahooJson(data);
+  //         Player.create(players).exec(function(err, players) {
+  //           sails.log(players.length + ' players created from seed file: ' + seedFile);
+  //           cb();
+  //         });
+  //       });
+  //     } else {
+  //       cb();
+  //     }
+  //   })
+  // });
 
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)

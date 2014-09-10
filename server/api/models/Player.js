@@ -1,15 +1,19 @@
 /**
 * Player.js
 *
-* @description :: TODO: You might write a short summary of how this model works and what it represents here.
+* @description :: A fantasy player
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
 
 module.exports = {
 
   attributes: {
-    owner: {
-      model: 'Entry'
+    sport: {
+      model: 'Sport'
+    },
+
+    poolTeam: {
+      model: 'PoolTeam'
     }
   }
 };

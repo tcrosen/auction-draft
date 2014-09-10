@@ -1,5 +1,5 @@
 /**
-* Entry.js
+* PoolTeam.js
 *
 * @description :: A pool entry (person)
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -12,9 +12,17 @@ module.exports = {
       type: 'string'
     },
 
+    pool: {
+      model: 'Pool'
+    },
+
+    owner: {
+      model: 'User'
+    },
+
     players: {
       collection: 'Player',
-      via: 'owner'
+      via: 'poolTeam'
     }
   },
 

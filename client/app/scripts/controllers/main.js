@@ -8,21 +8,30 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('MainCtrl', function ($scope, $interval, $firebase, EntryService, PlayerService, DraftService) {
+  .controller('MainCtrl', function ($scope, $interval, $firebase, PoolTeamService, PlayerService, DraftService) {
 
     var ref = new Firebase('https://auction-draft.firebaseio.com');
 
-    function getEntries() {
-      return EntryService.fetch().then(function(entries) {
-        $scope.entries = entries;
+    function init() {
+      // getPoolTeams().then(function(poolTeams) {
+      //   getPlayers();
+      //   $scope.draft = DraftService;
+      //   $scope.draft.poolTeams = angular.copy(poolTeams);
+      //   $scope.draft.currentAuction.entry = $scope.draft.poolTeams[0];
+      // });
+    }
 
-        var entriesRef = ref.child('entries');
-        var entriesSync = $firebase(entriesRef);
-        _.each($scope.entries, function(entry) {
-          entriesSync.$set(entry.name, entry);
+    function getPoolTeams() {
+      return PoolTeamService.fetch().then(function(poolTeams) {
+        $scope.poolTeams = poolTeams;
+
+        var poolTeamsRef = ref.child('poolTeams');
+        var poolTeamsSync = $firebase(poolTeamsRef);
+        _.each($scope.poolTeams, function(entry) {
+          poolTeamsSync.$set(entry.name, entry);
         });
 
-        return entries;
+        return poolTeams;
       });
     }
 
@@ -59,7 +68,7 @@ angular.module('clientApp')
 
     $scope.nominatePlayer = function(player) {
       // TODO: Set based on logged in user
-      var entry = $scope.entries[0];
+      var entry = $scope.poolTeams[0];
 
       $scope.draft.nominatePlayer(entry, player);
     };
@@ -90,16 +99,9 @@ angular.module('clientApp')
       }
     };
 
-    getEntries().then(function(entries) {
-      getPlayers();
-      $scope.draft = DraftService;
-      $scope.draft.entries = angular.copy(entries);
-      $scope.draft.currentAuction.entry = $scope.draft.entries[0];
-    });
-
     $scope.randomizeOrder = function() {
       $scope.draft.randomizeOrder();
-      $scope.draft.currentAuction.entry = $scope.draft.entries[0];
+      $scope.draft.currentAuction.entry = $scope.draft.poolTeams[0];
     };
 
     $scope.quickBids = function() {
@@ -145,8 +147,16 @@ angular.module('clientApp')
       var bid = amount || $scope.user.bid;
 
       // TODO: associate current user and get entry
-      var entry = _.sample($scope.entries);
+      var entry = _.sample($scope.poolTeams);
 
       $scope.draft.currentAuction.addBid(entry, bid);
     };
+
+    $scope.importPlayers = function() {
+      PlayerService.import().then(function(resp) {
+        getPlayers();
+      });
+    }
+
+    init();
   });

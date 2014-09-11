@@ -3,10 +3,18 @@
 angular.module('clientApp').factory('PlayerService', function(API) {
   var playerService = {};
 
-  playerService._api = new API('/players');
+  playerService._api = new API('/players', [{
+    name: 'import',
+    path: 'import',
+    verb: 'get'
+  }]);
 
   playerService.fetch = function() {
     return playerService._api.get();
+  };
+
+  playerService.import = function() {
+    return playerService._api.import();
   };
 
   playerService.getByDrafted = function(isDrafted) {

@@ -30,6 +30,6 @@ angular
       });
   })
   .constant('ENV', {
-    apiRoot: 'http://localhost:1337/v1',
+    apiRoot: 'http://localhost:1337',
     firebaseRef: new Firebase('https://auction-draft.firebaseio.com')
   });

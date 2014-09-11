@@ -1,5 +1,5 @@
 <ul class="draft-order">
-  <li ng-repeat="entry in draft.entries" ng-class="{ 'bg-warning': draft.currentAuction.entry.id === entry.id }">
-    {{ entry.name }}
+  <li ng-repeat="poolTeam in draft.poolTeams" ng-class="{ 'bg-warning': draft.currentAuction.poolTeam.id === poolTeam.id }">
+    {{ poolTeam.name }}
   </li>
 </ul>

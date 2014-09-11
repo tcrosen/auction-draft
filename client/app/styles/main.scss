@@ -38,20 +38,14 @@ body {
 }
 
 .player-filters {
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
 }
 
 .player-filters > li {
-  border-bottom: 1px solid #ddd;
 }
 
-.player-filters > li > a {
-  border-radius: 0;
-}
-
-.player-filters > li:last-child {
-  border-bottom: 0;
+.player-filters > li > a .label {
+  margin-left: 6px;
+  font-weight: 300;
 }
 
 .current-auction .player-name {

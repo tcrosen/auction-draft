@@ -1,0 +1,26 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><a href="" ng-click="sortPlayers('rank')">Rank</a></th>
+      <th><a href="" ng-click="sortPlayers('lastName')">Name</a></th>
+      <th class="hidden-xs"><a href="" ng-click="sortPlayers('position')">Position</a></th>
+      <th class="hidden-xs"><a href="" ng-click="sortPlayers('team')">Team</a></th>
+      <th>Owner</th>
+      <th>Cost</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-hide="grid.hideDrafted && player.owner"
+        ng-repeat="player in players | orderBy:grid.sort:grid.reverse track by player.id"
+        ng-class="{ success: draft.currentAuction.player.id === player.id }">
+      <td>{{ player.rank }}</td>
+      <td>{{ player.lastName }}, {{ player.firstName }}</td>
+      <td class="hidden-xs">{{ player.position }}</td>
+      <td class="hidden-xs">{{ player.team }}</td>
+      <td>{{ player.owner.name }}</td>
+      <td></td>
+      <td><a href="" ng-show="showNominate(player)" ng-click="nominatePlayer(player)">Nominate</a></td>
+    </tr>
+  </tbody>
+</table>

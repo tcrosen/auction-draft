@@ -45,42 +45,17 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-12 col-sm-3 col-md-2">
-    <ul class="nav nav-pills nav-stacked player-filters" role="tablist">
-      <li ng-class="{ active: !grid.filter }"><a href="" ng-click="filterPlayers()">All <span class="badge pull-right">{{ draftStats().remaining.total }}</a></li>
-      <li ng-class="{ active: grid.filter === 'C' }"><a href="" ng-click="filterPlayers('C')">Center <span class="badge pull-right">{{ draftStats().remaining.c }}</a></li>
-      <li ng-class="{ active: grid.filter === 'RW' }"><a href="" ng-click="filterPlayers('RW')">Right Wing <span class="badge pull-right">{{ draftStats().remaining.rw }}</a></li>
-      <li ng-class="{ active: grid.filter === 'LW' }"><a href="" ng-click="filterPlayers('LW')">Left Wing <span class="badge pull-right">{{ draftStats().remaining.lw }}</a></li>
-      <li ng-class="{ active: grid.filter === 'D' }"><a href="" ng-click="filterPlayers('D')">Defense <span class="badge pull-right">{{ draftStats().remaining.d }}</a></li>
-      <li ng-class="{ active: grid.filter === 'G' }"><a href="" ng-click="filterPlayers('G')">Goalie <span class="badge pull-right">{{ draftStats().remaining.g }}</a></li>
+  <div class="col-xs-12">
+    <ul class="nav nav-tabs player-filters" role="tablist">
+      <li ng-class="{ active: !players.filter }"><a href="" ng-click="filterPlayers()">All <span class="label label-primary">{{ draftStats().remaining.total }}</a></li>
+      <li ng-class="{ active: players.filter === 'C' }"><a href="" ng-click="filterPlayers('C')">Center <span class="label label-primary">{{ draftStats().remaining.c }}</a></li>
+      <li ng-class="{ active: players.filter === 'RW' }"><a href="" ng-click="filterPlayers('RW')">Right Wing <span class="label label-primary">{{ draftStats().remaining.rw }}</a></li>
+      <li ng-class="{ active: players.filter === 'LW' }"><a href="" ng-click="filterPlayers('LW')">Left Wing <span class="label label-primary">{{ draftStats().remaining.lw }}</a></li>
+      <li ng-class="{ active: players.filter === 'D' }"><a href="" ng-click="filterPlayers('D')">Defense <span class="label label-primary">{{ draftStats().remaining.d }}</a></li>
+      <li ng-class="{ active: players.filter === 'G' }"><a href="" ng-click="filterPlayers('G')">Goalie <span class="label label-primary">{{ draftStats().remaining.g }}</a></li>
     </ul>
   </div>
-  <div class="col-xs-12 col-sm-9 col-md-10">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th><a href="" ng-click="sortPlayers('rank')">Rank</a></th>
-          <th><a href="" ng-click="sortPlayers('lastName')">Name</a></th>
-          <th class="hidden-xs"><a href="" ng-click="sortPlayers('position')">Position</a></th>
-          <th class="hidden-xs"><a href="" ng-click="sortPlayers('team')">Team</a></th>
-          <th>Owner</th>
-          <th>Cost</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-hide="grid.hideDrafted && player.owner"
-            ng-repeat="player in grid.data | orderBy:grid.sort:grid.reverse track by player.id"
-            ng-class="{ success: draft.currentAuction.player.id === player.id }">
-          <td>{{ player.rank }}</td>
-          <td>{{ player.lastName }}, {{ player.firstName }}</td>
-          <td class="hidden-xs">{{ player.position }}</td>
-          <td class="hidden-xs">{{ player.team }}</td>
-          <td>{{ player.owner.name }}</td>
-          <td></td>
-          <td><a href="" ng-show="showNominate(player)" ng-click="nominatePlayer(player)">Nominate</a></td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="col-xs-12">
+    <div player-list players="players.filtered"></div>
   </div>
 </div>

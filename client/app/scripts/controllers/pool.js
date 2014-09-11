@@ -16,6 +16,8 @@ angular.module('clientApp')
       $scope.pool = pool;
 
       console.log('Pool loaded: ', pool);
+
+      getPlayers();
     }
 
     function getPoolTeams() {
@@ -34,18 +36,20 @@ angular.module('clientApp')
 
     function getPlayers() {
       return PlayerService.fetch().then(function(players) {
-        $scope.players = players;
-
-        $scope.grid = {
-          data: players,
-          sort: 'rank',
-          reverse: false,
-          hideDrafted: false,
+        $scope.players = {
+          all: players,
+          filtered: players,
           filter: null
         };
 
+        $scope.grid = {
+          sort: 'rank',
+          reverse: false,
+          hideDrafted: false
+        };
+
         $scope.draftStats = function() {
-          var players = $scope.players,
+          var players = $scope.players.all,
             undrafted = PlayerService.filterByDrafted(players, false),
             byPosition = PlayerService.filterByPosition;
 
@@ -87,12 +91,12 @@ angular.module('clientApp')
     };
 
     $scope.filterPlayers = function(position) {
-      $scope.grid.filter = position;
+      $scope.players.filter = position;
 
       if (position) {
-        $scope.grid.data = PlayerService.filterByPosition($scope.players, position);
+        $scope.players.filtered = PlayerService.filterByPosition($scope.players.all, position);
       } else {
-        $scope.grid.data = $scope.players;
+        $scope.players.filtered = $scope.players.all;
       }
     };
 

@@ -7,7 +7,6 @@
       <th class="hidden-xs"><a href="" ng-click="sortPlayers('team')">Team</a></th>
       <th>Owner</th>
       <th>Cost</th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -19,8 +18,7 @@
       <td class="hidden-xs">{{ player.position }}</td>
       <td class="hidden-xs">{{ player.team }}</td>
       <td>{{ player.owner.name }}</td>
-      <td></td>
-      <td><a href="" ng-show="showNominate(player)" ng-click="nominatePlayer(player)">Nominate</a></td>
+      <td><a class="btn btn-success btn-xs" href="" ng-click="nominatePlayer(player)">Nominate</a></td>
     </tr>
   </tbody>
 </table>

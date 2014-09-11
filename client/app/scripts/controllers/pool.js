@@ -15,6 +15,8 @@ angular.module('clientApp')
 
       $scope.pool = pool;
 
+      $scope.selectedPoolTeam = pool.teams[0];
+
       console.log('Pool loaded: ', pool);
 
       getPlayers();

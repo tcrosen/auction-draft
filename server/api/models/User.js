@@ -12,10 +12,6 @@ module.exports = {
       type: 'string'
     },
 
-    avatar: {
-      type: 'string'
-    },
-
     email: {
       type: 'string'
     },

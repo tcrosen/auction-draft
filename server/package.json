@@ -35,6 +35,7 @@
   "author": "terry",
   "license": "",
   "devDependencies": {
-    "request": "^2.42.0"
+    "request": "^2.42.0",
+    "sails-mongo": "^0.10.4"
   }
 }

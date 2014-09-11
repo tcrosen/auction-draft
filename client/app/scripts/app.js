@@ -25,6 +25,15 @@ angular
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/pools/:id', {
+        templateUrl: 'views/pool.html',
+        controller: 'PoolCtrl',
+        resolve: {
+          pool: function($routeParams, PoolService) {
+            return PoolService.fetch($routeParams.id);
+          }
+        }
+      })
       .otherwise({
         redirectTo: '/'
       });

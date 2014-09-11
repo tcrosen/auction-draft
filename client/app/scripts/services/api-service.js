@@ -24,8 +24,12 @@ angular.module('clientApp').factory('API', function($http, ENV) {
     }
   }
 
-  API.prototype.get = function() {
-    return $http.get(this.url).then(onSuccess, onError);
+  API.prototype.get = function(id) {
+    if (id) {
+      return $http.get(this.url + '/' + id).then(onSuccess, onError);
+    } else {
+      return $http.get(this.url).then(onSuccess, onError);
+    }
   };
 
   API.prototype.getById = function(id) {

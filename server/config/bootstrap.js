@@ -13,50 +13,50 @@ var fs = require('fs');
 
 module.exports.bootstrap = function(cb) {
 
-  var users = [{
-    name: 'Terry'
-  }, {
-    name: 'Bobby'
-  }, {
-    name: 'Jamie'
-  }, {
-    name: 'Navid'
-  }, {
-    name: 'Loreto'
-  }, {
-    name: 'Dave'
-  }, {
-    name: 'Mike'
-  }, {
-    name: 'George'
-  }];
-
-  User.create(users).then(function(createdUsers) {
-    sails.log('Users created: ', createdUsers);
-
-    Pool.create({
-      name: 'Auction 2014'
-    }).then(function(createdPool) {
-      sails.log('Pool created: ', createdPool);
-
-      var poolTeamsCreated = 0;
-
-      _.each(createdUsers, function(createdUser) {
-
-        PoolTeam.create({
-          pool: createdPool.id,
-          owner: createdUser.id
-        }).then(function(createdPoolTeam) {
-          sails.log('Pool team created: ', createdPoolTeam);
-          poolTeamsCreated++;
-
-          if (poolTeamsCreated >= createdUsers.length) {
-            cb();
-          }
-        });
-      });
-    });
-  });
+  // var users = [{
+  //   name: 'Terry'
+  // }, {
+  //   name: 'Bobby'
+  // }, {
+  //   name: 'Jamie'
+  // }, {
+  //   name: 'Navid'
+  // }, {
+  //   name: 'Loreto'
+  // }, {
+  //   name: 'Dave'
+  // }, {
+  //   name: 'Mike'
+  // }, {
+  //   name: 'George'
+  // }];
+  //
+  // User.create(users).then(function(createdUsers) {
+  //   sails.log('Users created: ', createdUsers);
+  //
+  //   Pool.create({
+  //     name: 'Auction 2014'
+  //   }).then(function(createdPool) {
+  //     sails.log('Pool created: ', createdPool);
+  //
+  //     var poolTeamsCreated = 0;
+  //
+  //     _.each(createdUsers, function(createdUser) {
+  //
+  //       PoolTeam.create({
+  //         pool: createdPool.id,
+  //         owner: createdUser.id
+  //       }).then(function(createdPoolTeam) {
+  //         sails.log('Pool team created: ', createdPoolTeam);
+  //         poolTeamsCreated++;
+  //
+  //         if (poolTeamsCreated >= createdUsers.length) {
+  //           cb();
+  //         }
+  //       });
+  //     });
+  //   });
+  // });
 
   // Player.find().exec(function(err, players) {
   //     var seedFile = __dirname + '/seed/players.json';
@@ -76,5 +76,5 @@ module.exports.bootstrap = function(cb) {
 
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-  // cb();
+  cb();
 };

@@ -14,15 +14,12 @@ module.exports = {
 
     teams: {
       collection: 'PoolTeam',
-      via: 'owner'
+      via: 'pool'
     },
 
+    // The user who runs the pool
     owner: {
       model: 'User'
-    },
-
-    sport: {
-      model: 'Sport'
     }
   }
 };

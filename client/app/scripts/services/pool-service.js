@@ -9,5 +9,9 @@ angular.module('clientApp').factory('PoolService', function(API) {
     return poolService._api.get(id);
   };
 
+  poolService.save = function(pool) {
+    return poolService._api.update(pool.id, pool);
+  };
+
   return poolService;
 });

@@ -18,11 +18,14 @@ angular.module('clientApp')
       console.log('Pool loaded: ', pool);
 
       getPlayers();
+
+      $scope.auction = {};
     }
 
     function getPoolTeams() {
       return PoolTeamService.fetch().then(function(poolTeams) {
         $scope.poolTeams = poolTeams;
+        $scope.selectedPoolTeam = poolTeams[0];
 
         var poolTeamsRef = ref.child('poolTeams');
         var poolTeamsSync = $firebase(poolTeamsRef);
@@ -39,13 +42,10 @@ angular.module('clientApp')
         $scope.players = {
           all: players,
           filtered: players,
-          filter: null
-        };
-
-        $scope.grid = {
+          filter: null,
+          hideDrafted: false,
           sort: 'rank',
-          reverse: false,
-          hideDrafted: false
+          reverse: false
         };
 
         $scope.draftStats = function() {
@@ -74,20 +74,17 @@ angular.module('clientApp')
       $scope.draft.nominatePlayer(entry, player);
     };
 
-    $scope.sortPlayers = function(col) {
-      if (col === $scope.grid.sort) {
-        $scope.grid.reverse = !$scope.grid.reverse;
-      } else {
-        $scope.grid.sort = col;
-        $scope.grid.reverse = false;
-      }
-    };
-
     $scope.draftPlayer = function(entry, player) {
       $scope.draft.draftPlayer(entry, player).then(function(resp) {
         console.log(resp);
         getPlayers();
       });
+    };
+
+    $scope.hideDrafted = function() {
+      $scope.players.hideDrafted = !$scope.players.hideDrafted;
+
+      console.log($scope.players.hideDrafted);
     };
 
     $scope.filterPlayers = function(position) {

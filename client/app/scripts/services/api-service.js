@@ -36,12 +36,12 @@ angular.module('clientApp').factory('API', function($http, ENV) {
     return $http.get(this.url + '/' + id).then(onSuccess, onError);
   };
 
-  API.prototype.post = function(requestData) {
+  API.prototype.create = function(requestData) {
     return $http.post(this.url, requestData).then(onSuccess, onError);
   };
 
-  API.prototype.put = function(resourcePath, requestData) {
-    return $http.put(this.url, requestData).then(onSuccess, onError);
+  API.prototype.update = function(id, requestData) {
+    return $http.put(this.url + '/' + id, requestData).then(onSuccess, onError);
   };
 
   return API;

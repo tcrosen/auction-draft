@@ -11,9 +11,9 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-hide="grid.hideDrafted && player.owner"
-        ng-repeat="player in players | orderBy:grid.sort:grid.reverse track by player.id"
-        ng-class="{ success: draft.currentAuction.player.id === player.id }">
+    <tr ng-hide="players.hideDrafted && player.owner"
+        ng-repeat="player in players | orderBy:sort:reverse track by player.id"
+        ng-class="{ success: player.highlight }">
       <td>{{ player.rank }}</td>
       <td>{{ player.lastName }}, {{ player.firstName }}</td>
       <td class="hidden-xs">{{ player.position }}</td>

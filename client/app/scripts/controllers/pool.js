@@ -14,6 +14,8 @@ angular.module('clientApp')
       // });
 
       $scope.pool = pool;
+
+      console.log('Pool loaded: ', pool);
     }
 
     function getPoolTeams() {

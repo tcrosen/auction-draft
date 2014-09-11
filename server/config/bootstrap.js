@@ -45,10 +45,21 @@ module.exports.bootstrap = function(cb) {
   //
   //       PoolTeam.create({
   //         pool: createdPool.id,
-  //         owner: createdUser.id
+  //         owner: createdUser.id,
+  //         name: createdUser.name + '\'s Team'
   //       }).then(function(createdPoolTeam) {
   //         sails.log('Pool team created: ', createdPoolTeam);
   //         poolTeamsCreated++;
+  //
+  //         // createdUser.poolTeams.add(createdPoolTeam.id);
+  //         // createdUser.save(function() {
+  //         //   sails.log('Pool team ' + createdPoolTeam.name + ' added to user ' + createdUser.name);
+  //         // });
+  //         //
+  //         // createdPool.teams.add(createdPoolTeam.id);
+  //         // createdPool.save(function() {
+  //         //   sails.log('Pool team ' + createdPoolTeam.name + ' added to pool ' + createdPool.name);
+  //         // });
   //
   //         if (poolTeamsCreated >= createdUsers.length) {
   //           cb();

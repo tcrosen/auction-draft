@@ -29,8 +29,8 @@ angular
         templateUrl: 'views/pool.html',
         controller: 'PoolCtrl',
         resolve: {
-          pool: function($routeParams, PoolService) {
-            return PoolService.fetch($routeParams.id);
+          pool: function($route, PoolService) {
+            return PoolService.fetch($route.current.params.id);
           }
         }
       })

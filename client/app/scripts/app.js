@@ -47,7 +47,7 @@ angular
         redirectTo: '/'
       });
   })
-  .run(function($rootScope, $location, AuthService) {
+  .run(function($rootScope, $location, AuthService, ENV) {
     $rootScope.$on('$firebaseSimpleLogin:login', function(e, user) {
       console.log('User logged in: ', user);
       $rootScope.currentUser = user;

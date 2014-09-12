@@ -9,7 +9,22 @@
  */
 angular.module('clientApp')
   .controller('MainCtrl', function ($scope, PoolService) {
-    PoolService.fetch().then(function(pools) {
-      $scope.pools = pools;
+    // On demand
+    // PoolService.getList().then(function(pools) {
+    //   $scope.pools = pools.val();
+    // });
+
+    $scope.pools = PoolService.list;
+
+    $scope.$watch('pools', function() {
+      console.log('Pools: ', $scope.pools);
     });
+
+    $scope.createPool = function() {
+      $scope.poolToEdit = null;
+    };
+
+    $scope.editPool = function(pool) {
+      $scope.poolToEdit = angular.copy(pool);
+    };
   });

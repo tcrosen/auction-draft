@@ -36,6 +36,13 @@ angular.module('clientApp').directive('poolEditForm', function(PoolService) {
         scope.master = {};
       };
 
+      scope.delete = function(pool) {
+        PoolService.delete(pool).then(function(resp) {
+          console.log(resp);
+          scope.cancel();
+        });
+      };
+
       scope.$watch('pool', function(newVal, oldVal) {
         var newForm = newVal && !oldVal,
             changedPool = newVal && oldVal && newVal.$id !== oldVal.$id;

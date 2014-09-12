@@ -5,6 +5,7 @@
     <p class="help-block" ng-show="poolForm.isSubmitted && poolForm.name.$error.required">Please enter a name for the pool</p>
   </div>
   <button type="submit" class="btn btn-primary" ng-click="submit(pool)">Submit</button>
-  <button type="submit" class="btn btn-danger" ng-click="reset()">Reset</button>
+  <button type="submit" class="btn btn-default" ng-click="reset()">Reset</button>
   <button type="submit" class="btn btn-default" ng-click="cancel()">Cancel</button>
+  <button type="submit" class="btn btn-danger" ng-click="delete(pool)">Delete</button>
 </form>

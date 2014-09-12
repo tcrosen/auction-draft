@@ -10,12 +10,17 @@ angular.module('clientApp').factory('PoolService', function(ENV, $firebase) {
     return $firebase(poolService._ref.child(id)).$asObject();
   };
 
-  poolService.getFromListById = function(id) {
+  poolService._listObjRef = function(id) {
     return poolService._listRef.$getRecord(id);
   };
 
   poolService.create = function(pool) {
     return poolService._listRef.$add(pool);
+  };
+
+  poolService.delete = function(pool) {
+    pool = poolService._listObjRef(pool.$id);
+    return poolService._listRef.$remove(pool);
   };
 
   poolService.update = function(pool) {

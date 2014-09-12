@@ -185,6 +185,7 @@ angular.module('clientApp')
 
           player.owner = poolTeam.owner;
           player.cost = cost;
+          player.shortName = player.name.split(' ')[1] + ', ' + player.name.split(' ')[0].substr(0, 1);
 
           rosterSpot.player = player;
           rosterSpot.cost = cost;

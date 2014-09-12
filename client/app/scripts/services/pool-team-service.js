@@ -1,23 +1,16 @@
 'use strict';
 
-angular.module('clientApp').factory('PoolTeamService', function(API) {
+angular.module('clientApp').factory('PoolTeamService', function(ENV, $firebase) {
   var poolTeamService = {};
 
-  poolTeamService._api = new API('/poolteams', [{
-    name: 'findWithOwners',
-    path: 'findWithOwners',
-    verb: 'get'
-  }]);
-
-  poolTeamService.fetch = function() {
-    return poolTeamService._api.findWithOwners();
+  poolTeamService._teamsRef = function(poolId) {
+    return ENV.poolsRef.child(poolId).child('teams');
   };
 
-  poolTeamService.getById = function(id) {
-    return poolTeamService._api.getById(id);
+  poolTeamService.addToPool = function(poolId, team) {
+    var teamsRef = poolTeamService._teamsRef(poolId).$asArray();
+    return teamsRef.$add(team);
   };
-
-
 
   return poolTeamService;
 });

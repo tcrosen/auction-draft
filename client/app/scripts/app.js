@@ -39,12 +39,21 @@ angular
           }
         }
       })
-      .when('/pools/:id', {
+      .when('/pools/:id/edit', {
         templateUrl: 'views/pool.html',
         controller: 'PoolCtrl',
         resolve: {
           pool: function($route, PoolService) {
             return PoolService.single($route.current.params.id);
+          }
+        }
+      })
+      .when('/draft/landing', {
+        templateUrl: 'views/draft-landing.html',
+        controller: 'DraftLandingCtrl',
+        resolve: {
+          pool: function($route, PoolService) {
+            return PoolService.single('-JWfYHPR-7z28GrRKaRv');
           }
         }
       })
@@ -57,10 +66,6 @@ angular
           }
         }
       })
-      .when('/pools/:id/login', {
-        templateUrl: 'views/login.html',
-        controller: 'LoginCtrl'
-      })
       .otherwise({
         redirectTo: '/'
       });
@@ -72,9 +77,27 @@ angular
     });
 
     $rootScope.$on('$firebaseSimpleLogin:logout', function(e) {
+      console.log('User logged out');
       $rootScope.currentUser = null;
       $location.path('/login');
     });
+
+    $rootScope.$on('$routeChangeStart', function(e, o) {
+      console.log('routeChangeStart: ', e, o);
+    });
+
+    $rootScope.$on('$routeChangeSuccess', function(e, o) {
+      console.log('routeChangeSuccess: ', e, o);
+    });
+
+    $rootScope.$on('$routeChangeError', function(e, o, x) {
+      console.error('routeChangeError: ', e, o, x);
+    });
+
+
+    ENV.poolsRef = ENV.firebaseRef.child('pools');
+    ENV.usersRef = ENV.firebaseRef.child('users');
+    ENV.playersRef = ENV.firebaseRef.child('players');
   })
   .constant('ENV', {
     apiRoot: 'http://localhost:1337',

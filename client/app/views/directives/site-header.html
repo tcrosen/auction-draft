@@ -18,7 +18,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle">Pools <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li ng-repeat="pool in nav.dropdowns.pools.items"><a href="#/pools/{{ pool.$id }}">{{ pool.name }}</a></li>
+            <li ng-repeat="pool in nav.dropdowns.pools.items"><a href="#/pools/{{ pool.$id }}/edit">{{ pool.name }}</a></li>
             <li class="divider"></li>
             <li><a href="#/pools/new">Create New</a></li>
           </ul>
@@ -26,7 +26,8 @@
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="" ng-click="logout()">Logout</a></li>
+        <li ng-show="user"><a href="" ng-click="logout()">Logout</a></li>
+        <li ng-show="!user"><a href="#/login">Login</a></li>
       </ul>
       <p class="navbar-text navbar-right">{{ user.email }}</p>
     </div><!-- /.navbar-collapse -->

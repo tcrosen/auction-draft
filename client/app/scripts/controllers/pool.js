@@ -102,8 +102,6 @@ angular.module('clientApp')
 
     $scope.hideDrafted = function() {
       $scope.players.hideDrafted = !$scope.players.hideDrafted;
-
-      console.log($scope.players.hideDrafted);
     };
 
     $scope.filterPlayers = function(position) {
@@ -177,6 +175,21 @@ angular.module('clientApp')
 
     $scope.logout = function() {
       AuthService.logout();
+    };
+
+    $scope.simulateDraft = function() {
+      _.each($scope.poolTeams, function(poolTeam) {
+        _.map(poolTeam.roster, function(rosterSpot) {
+          var player = _.sample($scope.players.filtered);
+          var cost = Math.floor(Math.random() * (300 - 1)) + 1;
+
+          player.owner = poolTeam.owner;
+          player.cost = cost;
+
+          rosterSpot.player = player;
+          rosterSpot.cost = cost;
+        });
+      });
     };
 
     init();

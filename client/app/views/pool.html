@@ -23,6 +23,7 @@
       </div>
       <div class="panel-body">
         <a href="" class="btn btn-danger btn-sm" ng-click="randomizeOrder()">Randomize Order</a> <a href="" class="btn btn-danger btn-sm" ng-click="importPlayers()">Import Players</a>
+        <a href="" class="btn btn-danger btn-sm" ng-click="simulateDraft()">Simulate</a>
       </div>
     </div>
   </div>
@@ -45,7 +46,7 @@
           <li ng-class="{ active: players.filter === 'D' }"><a href="" ng-click="filterPlayers('D')">D <span class="label label-default">{{ draftStats().remaining.d }}</a></li>
           <li ng-class="{ active: players.filter === 'G' }"><a href="" ng-click="filterPlayers('G')">G <span class="label label-default">{{ draftStats().remaining.g }}</a></li>
         </ul>
-        <div player-list players="players.filtered" sort="players.sort" reverse="players.reverse"></div>
+        <div player-list players="players.filtered" sort="players.sort" reverse="players.reverse" hide-drafted="players.hideDrafted"></div>
       </div>
     </div>
   </div>

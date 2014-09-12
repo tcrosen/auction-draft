@@ -10,15 +10,15 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-hide="players.hideDrafted && player.owner"
+    <tr ng-hide="hideDrafted && player.owner"
         ng-repeat="player in players | orderBy:sort:reverse track by player.id"
         ng-class="{ success: player.highlight }">
       <td>{{ player.rank }}</td>
       <td>{{ player.lastName }}, {{ player.firstName }}</td>
       <td class="hidden-xs">{{ player.position }}</td>
       <td class="hidden-xs">{{ player.team }}</td>
-      <td><a class="btn btn-success btn-xs" href="" ng-click="nominatePlayer(player)">Nominate</a>{{ player.owner.name }}</td>
-      <td></td>
+      <td><a class="btn btn-success btn-xs" href="" ng-show="!player.owner" ng-click="nominatePlayer(player)">Nominate</a>{{ player.owner.name }}</td>
+      <td>{{ player.cost }}</td>
     </tr>
   </tbody>
 </table>

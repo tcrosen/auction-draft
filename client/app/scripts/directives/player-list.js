@@ -6,7 +6,8 @@ angular.module('clientApp').directive('playerList', function() {
     scope: {
       players: '=',
       sort: '=',
-      reverse: '='
+      reverse: '=',
+      hideDrafted: '='
     },
     link: function(scope) {
       scope.sortPlayers = function(col) {

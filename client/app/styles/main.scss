@@ -26,15 +26,19 @@ body {
 
 .draft-order > li {
   display: table-cell;
-  padding: 10px;
-  text-align: center;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  border-right: 1px solid #ddd;
+  border-right: 2px solid #fff;
 }
 
 .draft-order > li:first-child {
-  border-left: 1px solid #ddd;
+}
+
+.draft-order > li .team-name {
+  margin: 0;
+  padding: 8px 0;
+  background-color: #eee;
+  text-align: center;
 }
 
 .player-filters {

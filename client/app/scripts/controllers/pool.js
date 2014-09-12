@@ -182,10 +182,18 @@ angular.module('clientApp')
         _.map(poolTeam.roster, function(rosterSpot) {
           var player = _.sample($scope.players.filtered);
           var cost = Math.floor(Math.random() * (300 - 1)) + 1;
+          var nameSplit = player.name.split(' '),
+            shortName;
+
+          if (nameSplit.length > 2) {
+            shortName = player.name.split(' ')[1] + ' ' + player.name.split(' ')[2] + ', ' + player.name.split(' ')[0].substr(0, 1);
+          } else {
+            shortName = player.name.split(' ')[1] + ', ' + player.name.split(' ')[0].substr(0, 1);
+          }
 
           player.owner = poolTeam.owner;
           player.cost = cost;
-          player.shortName = player.name.split(' ')[1] + ', ' + player.name.split(' ')[0].substr(0, 1);
+          player.shortName = shortName;
 
           rosterSpot.player = player;
           rosterSpot.cost = cost;

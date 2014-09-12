@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('PoolCtrl', function ($scope, pool, PoolService, $location) {
+  .controller('PoolCtrl', function ($scope, pool, PoolService, PoolTeamService, $location) {
     $scope.pool = pool;
 
     $scope.users = [{
@@ -30,5 +30,7 @@ angular.module('clientApp')
 
     $scope.addPoolTeam = function(team) {
       console.log('Adding pool team', team);
+
+      PoolTeamService.create($scope.pool.$id, team);
     };
   });

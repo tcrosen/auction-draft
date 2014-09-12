@@ -48,7 +48,13 @@ angular
       });
   })
   .run(function($rootScope, $location, AuthService) {
+    $rootScope.$on('$firebaseSimpleLogin:login', function(e, user) {
+      console.log('User logged in: ', user);
+      $rootScope.currentUser = user;
+    });
+
     $rootScope.$on('$firebaseSimpleLogin:logout', function(e) {
+      $rootScope.currentUser = null;
       $location.path('/login');
     });
   })

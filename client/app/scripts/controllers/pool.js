@@ -20,20 +20,37 @@ angular.module('clientApp')
       console.log('Pool loaded: ', pool);
 
       getPlayers();
+      getPoolTeams();
 
       $scope.auction = {};
     }
 
     function getPoolTeams() {
       return PoolTeamService.fetch().then(function(poolTeams) {
-        $scope.poolTeams = poolTeams;
-        $scope.selectedPoolTeam = poolTeams[0];
+        $scope.poolTeams = _.map(poolTeams, function(team) {
+          team.roster = [];
+
+          _.each(pool.settings.roster, function(num, position) {
+            for (var i = 0; i < num; i++) {
+              team.roster.push({
+                position: position,
+                player: null,
+                cost: null
+              });
+            }
+          });
+
+          return team;
+        });
+        //$scope.selectedPoolTeam = poolTeams[0];
 
         // var poolTeamsRef = ref.child('poolTeams');
         // var poolTeamsSync = $firebase(poolTeamsRef);
         // _.each($scope.poolTeams, function(entry) {
         //   poolTeamsSync.$set(entry.name, entry);
         // });
+
+        console.log($scope.poolTeams);
 
         return poolTeams;
       });

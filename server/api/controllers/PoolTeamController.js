@@ -6,4 +6,9 @@
  */
 
 module.exports = {
+  findWithOwners: function(req, res) {
+    PoolTeam.find().populate('owner').then(function(team) {
+      return res.json(team);
+    });
+  }
 };

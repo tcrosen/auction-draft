@@ -7,10 +7,10 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="position in pool.settings.positions track by $index">
-      <th>{{ position }}</th>
-      <td></td>
-      <td></td>
+    <tr ng-repeat="rosterSpot in team.roster track by $index">
+      <th>{{ rosterSpot.position }}</th>
+      <td>{{ rosterSpot.player }}</td>
+      <td>{{ rosterSpot.cost }}</td>
     </tr>
   </tbody>
 </table>

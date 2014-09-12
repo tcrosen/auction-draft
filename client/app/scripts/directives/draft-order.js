@@ -1,7 +1,12 @@
 'use strict';
 
-angular.module('clientApp').directive('draftOrder', function() {
+angular.module('clientApp').directive('draftOrder', function($rootScope) {
   return {
-    templateUrl: 'views/directives/draft-order.html'
+    templateUrl: 'views/directives/draft-order.html',
+    scope: {
+      poolTeams: '='
+    },
+    link: function(scope) {
+    }
   };
 });

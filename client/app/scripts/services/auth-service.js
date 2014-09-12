@@ -11,6 +11,10 @@ angular.module('clientApp')
       password: 'password'
     };
 
+    auth.getCurrentUser = function() {
+      return auth._client.$getCurrentUser();
+    };
+
     auth.isLoggedIn = function() {
       var deferred = $q.defer();
 

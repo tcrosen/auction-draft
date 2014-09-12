@@ -10,7 +10,6 @@ angular.module('clientApp')
 
       if ($scope.loginForm.$valid) {
         AuthService.login($scope.user.email, $scope.user.password, $scope.user.rememberMe).then(function(user) {
-          $rootScope.user = user;
           $location.path('/');
         }, function(error) {
           $scope.flash.error = error.message;

@@ -1,0 +1,59 @@
+<div pool-header pool="pool"></div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div draft-order pool-teams="poolTeams"></div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <div auction-block auction="currentAuction"></div>
+  </div>
+  <div class="col-xs-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Actions</h3>
+      </div>
+      <div class="panel-body">
+        <a href="" class="btn btn-danger btn-sm" ng-click="randomizeOrder()">Randomize Order</a> <a href="" class="btn btn-danger btn-sm" ng-click="importPlayers()">Import Players</a>
+        <a href="" class="btn btn-danger btn-sm" ng-click="simulateDraft()">Simulate</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">All Players</h3>
+      </div>
+      <div class="panel-body">
+        <p>
+          <label class="checkbox-inline">
+            <input type="checkbox" id="hideDrafted" ng-model="players.hideDrafted" ng-click="hideDrafted()"> Hide drafted
+          </label>
+        </p>
+        <ul class="nav nav-tabs player-filters" role="tablist">
+          <li ng-class="{ active: !players.filter }"><a href="" ng-click="filterPlayers()">All <span class="label label-default">{{ draftStats().remaining.total }}</a></li>
+          <li ng-class="{ active: players.filter === 'C' }"><a href="" ng-click="filterPlayers('C')">C <span class="label label-default">{{ draftStats().remaining.c }}</a></li>
+          <li ng-class="{ active: players.filter === 'RW' }"><a href="" ng-click="filterPlayers('RW')">RW <span class="label label-default">{{ draftStats().remaining.rw }}</a></li>
+          <li ng-class="{ active: players.filter === 'LW' }"><a href="" ng-click="filterPlayers('LW')">LW <span class="label label-default">{{ draftStats().remaining.lw }}</a></li>
+          <li ng-class="{ active: players.filter === 'D' }"><a href="" ng-click="filterPlayers('D')">D <span class="label label-default">{{ draftStats().remaining.d }}</a></li>
+          <li ng-class="{ active: players.filter === 'G' }"><a href="" ng-click="filterPlayers('G')">G <span class="label label-default">{{ draftStats().remaining.g }}</a></li>
+        </ul>
+        <div player-list players="players.filtered" sort="players.sort" reverse="players.reverse" hide-drafted="players.hideDrafted"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ poolTeams[0].name }}</h3>
+      </div>
+      <div class="panel-body">
+        <div pool-team team="poolTeams[0]" pool="pool"></div>
+      </div>
+    </div>
+  </div>
+</div>

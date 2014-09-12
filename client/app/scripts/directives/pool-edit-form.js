@@ -1,30 +1,32 @@
 'use strict';
 
-angular.module('clientApp').directive('poolEditForm', function(PoolService) {
+angular.module('clientApp').directive('poolEditForm', function(PoolService, ENV, $location) {
   return {
     templateUrl: 'views/directives/pool-edit-form.html',
     scope: {
-      pool: '='
+      pool: '=',
+      onCancel: '='
     },
     link: function(scope) {
       scope.poolForm.isSubmitted = false;
-      scope.master = {};
-
-      scope.reset = function() {
-        scope.pool = angular.copy(scope.master);
-        scope.poolForm.isSubmitted = false;
+      scope.positions = ENV.positions;
+      scope.flash = {
+        class: 'success',
+        message: null
       };
 
       scope.submit = function(pool) {
+        var isNew = !pool.$id;
+
         scope.poolForm.isSubmitted = true;
+        scope.flash.message = null;
 
         if (scope.poolForm.$valid) {
-          PoolService.save(pool).then(function(resp) {
-            if (!scope.master.$id) {
-              // If a new record was added, clear the form
-              scope.cancel();
+          PoolService.save(pool).then(function(newRef) {
+            if (isNew) {
+              $location.path('/pools/' + newRef.name());
             } else {
-              scope.master = angular.copy(pool);
+              scope.flash.message = 'Pool settings updated';
             }
           });
         }
@@ -32,25 +34,23 @@ angular.module('clientApp').directive('poolEditForm', function(PoolService) {
 
       scope.cancel = function() {
         scope.poolForm.isSubmitted = false;
-        scope.pool = {};
-        scope.master = {};
+        scope.onCancel();
       };
 
       scope.delete = function(pool) {
         PoolService.delete(pool).then(function(resp) {
-          console.log(resp);
-          scope.cancel();
+          scope.onCancel();
         });
       };
 
-      scope.$watch('pool', function(newVal, oldVal) {
-        var newForm = newVal && !oldVal,
-            changedPool = newVal && oldVal && newVal.$id !== oldVal.$id;
-
-        if (newForm || changedPool) {
-          scope.master = angular.copy(newVal);
-        }
-      });
+      // scope.$watch('pool', function(newVal, oldVal) {
+      //   var newForm = newVal && !oldVal,
+      //       changedPool = newVal && oldVal && newVal.$id !== oldVal.$id;
+      //
+      //   if (newForm || changedPool) {
+      //     scope.master = angular.copy(newVal);
+      //   }
+      // });
     }
   };
 });

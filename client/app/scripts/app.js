@@ -30,12 +30,30 @@ angular
         templateUrl: 'views/login.html',
         controller: 'LoginCtrl'
       })
+      .when('/pools/new', {
+        templateUrl: 'views/pool.html',
+        controller: 'PoolCtrl',
+        resolve: {
+          pool: function(Pool) {
+            return new Pool();
+          }
+        }
+      })
       .when('/pools/:id', {
         templateUrl: 'views/pool.html',
         controller: 'PoolCtrl',
         resolve: {
           pool: function($route, PoolService) {
-            return PoolService.fetch($route.current.params.id);
+            return PoolService.single($route.current.params.id);
+          }
+        }
+      })
+      .when('/draft/:id', {
+        templateUrl: 'views/draft.html',
+        controller: 'DraftCtrl',
+        resolve: {
+          pool: function($route, PoolService) {
+            return PoolService.single($route.current.params.id);
           }
         }
       })
@@ -60,5 +78,27 @@ angular
   })
   .constant('ENV', {
     apiRoot: 'http://localhost:1337',
-    firebaseRef: new Firebase('https://auction-draft.firebaseio.com')
+    firebaseRef: new Firebase('https://auction-draft.firebaseio.com'),
+    positions: [{
+      label: 'C',
+      name: 'Center'
+    }, {
+      label: 'RW',
+      name: 'Right Wing'
+    }, {
+      label: 'LW',
+      name: 'Left Wing'
+    }, {
+      label: 'D',
+      name: 'Defense'
+    }, {
+      label: 'G',
+      name: 'Goalie'
+    }, {
+      label: 'B',
+      name: 'Bench'
+    }, {
+      label: 'Util',
+      name: 'Utility'
+    }]
   });

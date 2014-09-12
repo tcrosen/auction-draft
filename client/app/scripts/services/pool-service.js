@@ -30,8 +30,6 @@ angular.module('clientApp').factory('PoolService', function(ENV, $firebase) {
   };
 
   poolService.save = function(pool) {
-    console.log('Saving pool ', pool);
-
     if (pool.$id) {
       return poolService.update(pool);
     } else {
@@ -40,6 +38,7 @@ angular.module('clientApp').factory('PoolService', function(ENV, $firebase) {
   };
 
   poolService.list = poolService._listRef;
+  poolService.single = poolService._objRef;
 
   return poolService;
 });

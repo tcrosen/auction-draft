@@ -7,13 +7,6 @@ angular.module('clientApp').directive('poolHeader', function(AuthService) {
       pool: '='
     },
     link: function(scope) {
-      scope.logout = function() {
-        AuthService.logout();
-      };
-
-      AuthService.getCurrentUser().then(function(user) {
-        scope.user = user;
-      });
     }
   };
 });

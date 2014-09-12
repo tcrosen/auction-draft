@@ -1,8 +1,5 @@
-<div class="row">
-  <div class="col-xs-12">
-    <a href="" class="btn btn-danger" ng-click="randomizeOrder()">Randomize Order</a> <a href="" class="btn btn-danger" ng-click="importPlayers()">Import Players</a>
-  </div>
-</div>
+<button ng-click="logout()">Logout</button>
+
 <div class="row">
   <div class="col-xs-12">
     <div draft-order></div>
@@ -10,19 +7,22 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-12 col-md-6 col-md-offset-3">
-    <div auction-block auction="currentAuction"></div>
-  </div>
-</div>
-
-<div class="row">
   <div class="col-xs-12 col-md-4">
+    <div auction-block auction="currentAuction"></div>
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">{{ selectedPoolTeam.name }}</h3>
       </div>
       <div class="panel-body">
         <div pool-team team="selectedPoolTeam" pool="pool"></div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Actions</h3>
+      </div>
+      <div class="panel-body">
+        <a href="" class="btn btn-danger btn-sm" ng-click="randomizeOrder()">Randomize Order</a> <a href="" class="btn btn-danger btn-sm" ng-click="importPlayers()">Import Players</a>
       </div>
     </div>
   </div>

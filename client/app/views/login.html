@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-6 col-offset-xs-3">
+      <div class="page-header">
+        <h1>Login</h1>
+      </div>
+      <div class="alert alert-danger" ng-show="flash.error">
+        {{ flash.error }}
+      </div>
+      <form name="loginForm" novalidate role="form">
+        <div class="form-group" ng-class="{ 'has-error': loginForm.isSubmitted && loginForm.email.$invalid }">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" name="email" ng-model="user.email" required placeholder="">
+          <p class="help-block" ng-show="loginForm.isSubmitted && loginForm.email.$error.required">Please enter your email</p>
+          <p class="help-block" ng-show="loginForm.isSubmitted && loginForm.email.$error.email">Email is not in a valid format</p>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': loginForm.isSubmitted && loginForm.password.$invalid }">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" name="password" ng-model="user.password" required placeholder="">
+          <p class="help-block" ng-show="loginForm.isSubmitted && loginForm.password.$error.required">Please enter your password</p>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="user.rememberMe" name="rememberMe"> Remember me
+          </label>
+        </div>
+        <button type="submit" class="btn btn-default" ng-click="login()">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>

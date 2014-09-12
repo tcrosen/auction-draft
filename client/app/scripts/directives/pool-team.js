@@ -5,7 +5,9 @@ angular.module('clientApp').directive('poolTeam', function() {
     templateUrl: 'views/directives/pool-team.html',
     scope: {
       pool: '=',
-      team: '='
+      team: '=',
+      condensed: '=',
+      showHeader: '='
     },
     link: function(scope) {
     }

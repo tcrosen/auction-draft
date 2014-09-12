@@ -17,8 +17,8 @@
       <td>{{ player.lastName }}, {{ player.firstName }}</td>
       <td class="hidden-xs">{{ player.position }}</td>
       <td class="hidden-xs">{{ player.team }}</td>
-      <td>{{ player.owner.name }}</td>
-      <td><a class="btn btn-success btn-xs" href="" ng-click="nominatePlayer(player)">Nominate</a></td>
+      <td><a class="btn btn-success btn-xs" href="" ng-click="nominatePlayer(player)">Nominate</a>{{ player.owner.name }}</td>
+      <td></td>
     </tr>
   </tbody>
 </table>

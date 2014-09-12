@@ -14,13 +14,14 @@
   "quotmark": "single",
   "regexp": true,
   "undef": true,
-  "unused": true,
-  "strict": true,
+  "unused": false,
+  "strict": false,
   "trailing": true,
   "smarttabs": true,
   "globals": {
     "angular": false,
     "_": false,
-    "Firebase": true
+    "Firebase": true,
+    "sails": true
   }
 }

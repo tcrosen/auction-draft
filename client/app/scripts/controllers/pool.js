@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('PoolCtrl', function ($scope, pool, PoolService, $firebase, PoolTeamService, PlayerService, DraftService) {
+  .controller('PoolCtrl', function ($scope, pool, AuthService, PoolService, PoolTeamService, PlayerService, DraftService) {
 
     var ref = new Firebase('https://auction-draft.firebaseio.com');
 
@@ -29,11 +29,11 @@ angular.module('clientApp')
         $scope.poolTeams = poolTeams;
         $scope.selectedPoolTeam = poolTeams[0];
 
-        var poolTeamsRef = ref.child('poolTeams');
-        var poolTeamsSync = $firebase(poolTeamsRef);
-        _.each($scope.poolTeams, function(entry) {
-          poolTeamsSync.$set(entry.name, entry);
-        });
+        // var poolTeamsRef = ref.child('poolTeams');
+        // var poolTeamsSync = $firebase(poolTeamsRef);
+        // _.each($scope.poolTeams, function(entry) {
+        //   poolTeamsSync.$set(entry.name, entry);
+        // });
 
         return poolTeams;
       });
@@ -156,7 +156,11 @@ angular.module('clientApp')
       PlayerService.import().then(function(resp) {
         getPlayers();
       });
-    }
+    };
+
+    $scope.logout = function() {
+      AuthService.logout();
+    };
 
     init();
 

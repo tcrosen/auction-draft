@@ -18,7 +18,7 @@
       <td class="hidden-xs">{{ player.position }}</td>
       <td class="hidden-xs">{{ player.team }}</td>
       <td><a class="btn btn-success btn-xs" href="" ng-show="!player.owner" ng-click="nominatePlayer(player)">Nominate</a>{{ player.owner.name }}</td>
-      <td>{{ player.cost }}</td>
+      <td align="right">{{ player.cost | currency }}</td>
     </tr>
   </tbody>
 </table>

@@ -1,7 +1,7 @@
 {
   "name": "server",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.0-1",
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
@@ -37,5 +37,9 @@
   "devDependencies": {
     "request": "^2.42.0",
     "sails-mongo": "^0.10.4"
+  },
+  "subdomain": "auction-pool",
+  "engines": {
+    "node": "0.10.x"
   }
 }

@@ -28,9 +28,12 @@ angular.module('clientApp')
       $location.path('/pools');
     };
 
-    $scope.addPoolTeam = function(team) {
-      console.log('Adding pool team', team);
-
+    $scope.editTeamSubmit = function(team) {
       PoolTeamService.create($scope.pool.$id, team);
+      $scope.editTeam = null;
+    };
+
+    $scope.editTeam = function(teamId) {
+      $scope.editTeam = PoolTeamService.single($scope.pool.$id, teamId);
     };
   });

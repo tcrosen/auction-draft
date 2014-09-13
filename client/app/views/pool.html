@@ -23,27 +23,47 @@
           <h3 class="panel-title">Teams</h3>
         </div>
         <div class="panel-body">
-          <form name="newTeamForm" class="form-horizontal" role="form">
+          <form name="editTeamForm" class="form-horizontal" role="form">
             <div class="form-group">
-              <label for="newTeamName" class="col-sm-2 control-label">Name</label>
+              <label for="editTeamName" class="col-sm-2 control-label">Name</label>
               <div class="col-sm-6">
-                <input type="text" class="form-control" id="teamName" ng-model="newTeam.name" placeholder="">
+                <input type="text" class="form-control" id="teamName" ng-model="editTeam.name" placeholder="">
               </div>
             </div>
             <div class="form-group">
               <label for="newTeamOwner" class="col-sm-2 control-label">Owner</label>
               <div class="col-sm-6">
-                <select name="newTeamOwner" class="form-control" ng-model="newTeam.owner" ng-options="user.id as user.name for user in users">
+                <select name="newTeamOwner" class="form-control" ng-model="editTeam.owner" ng-options="user.id as user.name for user in users">
                 </select>
               </div>
             </div>
             <div class="form-group">
               <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default" ng-click="addPoolTeam(newTeam)">Add</button>
+                <button type="submit" class="btn btn-success" ng-show="!editTeam.$id" ng-click="editTeamSubmit(editTeam)">Add</button>
+                <button type="submit" class="btn btn-success" ng-show="editTeam.$id" ng-click="editTeamSubmit(editTeam)">Update</button>
               </div>
             </div>
           </form>
         </div>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Owner</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="(key, team) in pool.teams">
+              <td>{{ team.name }}</td>
+              <td>{{ team.owner }}</td>
+              <td>
+                <button type="button" class="btn btn-info btn-xs" ng-click="editTeam(key)"><span class="glyphicon glyphicon-edit"></span></button>
+                <button type="button" class="btn btn-danger btn-xs" ng-click="deletedTeam(key)"><span class="glyphicon glyphicon-remove"></span></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

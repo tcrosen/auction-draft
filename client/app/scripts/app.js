@@ -82,17 +82,17 @@ angular
       $location.path('/login');
     });
 
-    $rootScope.$on('$routeChangeStart', function(e, o) {
-      console.log('routeChangeStart: ', e, o);
-    });
+    // $rootScope.$on('$routeChangeStart', function(e, o) {
+    //   console.log('routeChangeStart: ', e, o);
+    // });
 
-    $rootScope.$on('$routeChangeSuccess', function(e, o) {
-      console.log('routeChangeSuccess: ', e, o);
-    });
-
-    $rootScope.$on('$routeChangeError', function(e, o, x) {
-      console.error('routeChangeError: ', e, o, x);
-    });
+    // $rootScope.$on('$routeChangeSuccess', function(e, o) {
+    //   console.log('routeChangeSuccess: ', e, o);
+    // });
+    //
+    // $rootScope.$on('$routeChangeError', function(e, o, x) {
+    //   console.error('routeChangeError: ', e, o, x);
+    // });
 
 
     ENV.poolsRef = ENV.firebaseRef.child('pools');

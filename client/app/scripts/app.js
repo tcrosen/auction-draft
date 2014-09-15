@@ -24,7 +24,12 @@ angular
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        controller: 'MainCtrl',
+        resolve: {
+          pool: function($route, PoolService) {
+            return PoolService.single('-JWfYHPR-7z28GrRKaRv');
+          }
+        }
       })
       .when('/login', {
         templateUrl: 'views/login.html',

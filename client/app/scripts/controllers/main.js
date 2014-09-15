@@ -8,9 +8,9 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('MainCtrl', function ($scope, $rootScope, PoolService) {
-    if ($rootScope.user) {
+  .controller('MainCtrl', function ($scope, $rootScope, pool, PoolService) {
 
-    }
-    $scope.pools = PoolService.list;
+    $scope.pool = pool;
+
+    console.log($scope.pool);
   });

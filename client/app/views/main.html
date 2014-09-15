@@ -1,68 +1,22 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-      <h1>Welcome to <strong>Auction 2014</strong>!</h1>
+      <h1>Welcome to <strong>{{ pool.name }}</strong>!</h1>
       <p>Please select your name to join the draft:</p><br>
     </div>
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-sm-offset-2">
         <div class="list-group">
-          <a href="#" class="list-group-item">
+          <a href="" ng-repeat="team in pool.teams" ng-disabled="!team.isActive" ng-click="selectTeam(team.id)" class="list-group-item" ng-class="{ 'list-group-item-success': team.isRegistered }">
             <h4 class="list-group-item-heading">
-              <span class="glyphicon glyphicon-tower"></span>
-              Navid</h4>
-            <p class="list-group-item-text">6th season</p>
-            <p class="list-group-item-text">Last year: <strong>1st</strong></p>
-          </a>
-          <a href="#" class="list-group-item list-group-item-success">
-            <h4 class="list-group-item-heading">Loreto</h4>
-            <div class="pull-right">
+              <span ng-show="team.lastYearRank === 1" class="glyphicon glyphicon-tower"></span>
+              <span ng-show="team.lastYearRank === 0" class="glyphicon glyphicon-plus"></span>
+              {{ team.name }}</h4>
+            <div class="pull-right" ng-show="team.isRegistered">
               <span class="glyphicon glyphicon-ok"></span> &nbsp;<span class="muted">Registered</span>
             </div>
-            <p class="list-group-item-text">4th season</p>
-            <p class="list-group-item-text">Last year: <strong>2nd</strong></p>
-          </a>
-          <a href="#" class="list-group-item">
-            <h4 class="list-group-item-heading"> Mike P.</h4>
-            <p class="list-group-item-text">6th season</p>
-            <p class="list-group-item-text">Last year: <strong>3rd</strong></p>
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-        <div class="list-group">
-          <a href="#" class="list-group-item">
-            <h4 class="list-group-item-heading">Dan</h4>
-            <p class="list-group-item-text">5th season</p>
-            <p class="list-group-item-text">Last year: <strong>5th</strong></p>
-          </a>
-          <a href="#" class="list-group-item list-group-item-success">
-            <h4 class="list-group-item-heading">Bobby</h4>
-            <div class="pull-right">
-              <span class="glyphicon glyphicon-ok"></span> &nbsp;<span class="muted">Registered</span>
-            </div>
-            <p class="list-group-item-text">6th season</p>
-            <p class="list-group-item-text">Last year: <strong>6th</strong></p>
-          </a>
-          <a href="#" class="list-group-item">
-            <h4 class="list-group-item-heading">Dave</h4>
-            <p class="list-group-item-text">3rd season</p>
-            <p class="list-group-item-text">Last year: <strong>7st</strong></p>
-          </a>
-          <a href="#" class="list-group-item list-group-item-success">
-            <h4 class="list-group-item-heading">Terry</h4>
-            <div class="pull-right">
-              <span class="glyphicon glyphicon-ok"></span> &nbsp;<span class="muted">Registered</span>
-            </div>
-            <p class="list-group-item-text">6th season</p>
-            <p class="list-group-item-text">Last year: <strong>8th</strong></p>
-          </a>
-          <a href="#" class="list-group-item">
-            <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-plus"></span> Mike M.</h4>
-            <p class="list-group-item-text">1st season</p>
-            <p class="list-group-item-text">Welcome to the pool!</p>
+            <p class="list-group-item-text">Last year's rank: <strong>{{ team.lastYearRank }}</strong></p>
+            <p class="list-group-item-text">Seasons: {{ team.seasons }}</p>
           </a>
         </div>
       </div>

@@ -1,53 +1,19 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('LoginCtrl', function($scope, loginService, $location) {
-    $scope.email = null;
-    $scope.pass = null;
-    $scope.confirm = null;
-    $scope.createMode = false;
+  .controller('LoginCtrl', function ($scope, $rootScope, $location, AuthService) {
+    $scope.flash = {};
 
-    $scope.login = function(cb) {
-      $scope.err = null;
-      if (!$scope.email) {
-        $scope.err = 'Please enter an email address';
-      } else if (!$scope.pass) {
-        $scope.err = 'Please enter a password';
-      } else {
-        loginService.login($scope.email, $scope.pass, function(err, user) {
-          $scope.err = err ? err + '' : null;
-          if (!err) {
-            cb && cb(user);
-          }
+    $scope.login = function() {
+      $scope.flash = {};
+      $scope.loginForm.isSubmitted = true;
+
+      if ($scope.loginForm.$valid) {
+        AuthService.login($scope.user.email, $scope.user.password, $scope.user.rememberMe).then(function(user) {
+          $location.path('/');
+        }, function(error) {
+          $scope.flash.error = error.message;
         });
       }
     };
-
-    $scope.createAccount = function() {
-      $scope.err = null;
-      if (assertValidLoginAttempt()) {
-        loginService.createAccount($scope.email, $scope.pass, function(err, user) {
-          if (err) {
-            $scope.err = err ? err + '' : null;
-          } else {
-            // must be logged in before I can write to my profile
-            $scope.login(function() {
-              loginService.createProfile(user.uid, user.email);
-              $location.path('/account');
-            });
-          }
-        });
-      }
-    };
-
-    function assertValidLoginAttempt() {
-      if (!$scope.email) {
-        $scope.err = 'Please enter an email address';
-      } else if (!$scope.pass) {
-        $scope.err = 'Please enter a password';
-      } else if ($scope.pass !== $scope.confirm) {
-        $scope.err = 'Passwords do not match';
-      }
-      return !$scope.err;
-    }
   });

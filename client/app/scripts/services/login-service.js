@@ -14,20 +14,14 @@ angular.module('clientApp')
        * @param {Function} [callback]
        * @returns {*}
        */
-      login: function(email, pass, callback) {
+      login: function(email, pass, rememberMe) {
         assertAuth();
-        auth.$login('password', {
+
+        return auth.$login('password', {
           email: email,
           password: pass,
-          rememberMe: true
-        }).then(function(user) {
-          if (callback) {
-            //todo-bug https://github.com/firebase/angularFire/issues/199
-            $timeout(function() {
-              callback(null, user);
-            });
-          }
-        }, callback);
+          rememberMe: rememberMe
+        });
       },
 
       logout: function() {

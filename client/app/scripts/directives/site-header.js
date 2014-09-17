@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clientApp').directive('siteHeader', function(AuthService, PoolService) {
+angular.module('clientApp').directive('siteHeader', function($rootScope, loginService, syncData, PoolService) {
   return {
     templateUrl: 'views/directives/site-header.html',
     scope: true,
@@ -12,7 +12,7 @@ angular.module('clientApp').directive('siteHeader', function(AuthService, PoolSe
       // });
 
       scope.logout = function() {
-        AuthService.logout();
+        loginService.logout();
       };
 
       scope.nav = {
@@ -24,9 +24,7 @@ angular.module('clientApp').directive('siteHeader', function(AuthService, PoolSe
         }
       };
 
-      AuthService.getCurrentUser().then(function(user) {
-        scope.user = user;
-      });
+      // syncData(['users', $rootScope.auth.user.uid]).$bind(scope, 'user');
     }
   };
 });

@@ -25,11 +25,9 @@ angular
     //   $rootScope.currentUser = user;
     // });
     //
-    // $rootScope.$on('$firebaseSimpleLogin:logout', function(e) {
-    //   console.log('User logged out');
-    //   $rootScope.currentUser = null;
-    //   $location.path('/login');
-    // });
+    $rootScope.$on('$firebaseSimpleLogin:logout', function(e) {
+      console.log('User logged out');
+    });
 
     // $rootScope.$on('$routeChangeStart', function(e, o) {
     //   console.log('routeChangeStart: ', e, o);

@@ -2,6 +2,13 @@ angular.module('clientApp')
 
   .factory('loginService', function($rootScope, $firebaseSimpleLogin, firebaseRef, profileCreator, $timeout) {
     var auth = null;
+
+    function assertAuth() {
+      if (auth === null) {
+        throw new Error('Must call loginService.init() before using its methods');
+      }
+    }
+
     return {
       init: function() {
         auth = $firebaseSimpleLogin(firebaseRef());
@@ -29,64 +36,36 @@ angular.module('clientApp')
         auth.$logout();
       },
 
-      changePassword: function(opts) {
+      changePassword: function(email, oldPass, newPass) {
         assertAuth();
-        var cb = opts.callback || function() {};
-        if (!opts.oldpass || !opts.newpass) {
-          $timeout(function() {
-            cb('Please enter a password');
-          });
-        } else if (opts.newpass !== opts.confirm) {
-          $timeout(function() {
-            cb('Passwords do not match');
-          });
-        } else {
-          auth.$changePassword(opts.email, opts.oldpass, opts.newpass).then(function() {
-            cb && cb(null);
-          }, cb);
-        }
+        return auth.$changePassword(email, oldPass, newPass);
       },
 
       createAccount: function(email, pass, callback) {
         assertAuth();
-        auth.$createUser(email, pass).then(function(user) {
-          callback && callback(null, user);
-        }, callback);
+        return auth.$createUser(email, pass);
       },
 
       createProfile: profileCreator
     };
-
-    function assertAuth() {
-      if (auth === null) {
-        throw new Error('Must call loginService.init() before using its methods');
-      }
-    }
   })
 
   .factory('profileCreator', function(firebaseRef, $timeout) {
-    return function(id, email, callback) {
-      firebaseRef('users/' + id).set({
-        email: email,
-        name: firstPartOfEmail(email)
-      }, function(err) {
-        //err && console.error(err);
-        if (callback) {
-          $timeout(function() {
-            callback(err);
-          });
-        }
-      });
-
-      function firstPartOfEmail(email) {
-        return ucfirst(email.substr(0, email.indexOf('@')) || '');
-      }
-
-      function ucfirst(str) {
-        // credits: http://kevin.vanzonneveld.net
-        str += '';
-        var f = str.charAt(0).toUpperCase();
-        return f + str.substr(1);
-      }
+    function firstPartOfEmail(email) {
+      return ucfirst(email.substr(0, email.indexOf('@')) || '');
     }
+
+    function ucfirst(str) {
+      // credits: http://kevin.vanzonneveld.net
+      str += '';
+      var f = str.charAt(0).toUpperCase();
+      return f + str.substr(1);
+    }
+
+    return function(id, email, callback) {
+      return firebaseRef('users/' + id).set({
+        email: email,
+        username: firstPartOfEmail(email)
+      });
+    };
   });

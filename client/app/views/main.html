@@ -2,24 +2,28 @@
   <div class="row">
     <div class="col-xs-12 col-sm-8 col-sm-offset-2">
       <h1>Welcome to <strong>{{ pool.name }}</strong>!</h1>
-      <p>Please select your name to join the draft:</p><br>
+      <p>Please select your name:</p><br>
     </div>
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-        <div class="list-group">
-          <a href="/pools/{{ pool.$id }}/register/{{ team.$id }}" ng-repeat="team in pool.teams" ng-disabled="!team.isActive" class="list-group-item" ng-class="{ 'list-group-item-success': team.isRegistered }">
+        <div class="list-group claim-team-list">
+          <a href="" ng-click="claimTeam(team)" ng-repeat="team in teams" ng-disabled="!team.isActive" class="list-group-item" ng-class="{ 'list-group-item-success': team.isRegistered }">
             <h4 class="list-group-item-heading">
               <span ng-show="team.lastYearRank === 1" class="glyphicon glyphicon-tower"></span>
-              <span ng-show="team.lastYearRank === 0" class="glyphicon glyphicon-plus"></span>
-              {{ team.name }}</h4>
+              <span ng-show="team.lastYearRank === 0" class="glyphicon glyphicon-star"></span>
+              {{ team.name }} <small ng-if="team.isActive">{{ team.seasons + 1 | nth }} season</small><small ng-if="!team.isActive">Inactive</small></h4>
             <div class="pull-right" ng-show="team.isRegistered">
               <span class="glyphicon glyphicon-ok"></span> &nbsp;<span class="muted">Registered</span>
             </div>
-            <p class="list-group-item-text">Last year's rank: <strong>{{ team.lastYearRank }}</strong></p>
-            <p class="list-group-item-text">Seasons: {{ team.seasons }}</p>
+            <p class="list-group-item-text">Last year's rank:
+              <strong ng-show="team.lastYearRank === 0">N/A</strong>
+              <strong ng-show="team.lastYearRank > 0">{{ team.lastYearRank }}</strong>
+            </p>
           </a>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<a href="" ng-click="seedTeams()">Seed Teams</a>

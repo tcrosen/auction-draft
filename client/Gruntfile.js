@@ -34,7 +34,7 @@ module.exports = function (grunt) {
         tasks: ['wiredep']
       },
       js: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+      files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
         tasks: ['newer:jshint:all'],
         options: {
           livereload: '<%= connect.options.livereload %>'
@@ -49,7 +49,8 @@ module.exports = function (grunt) {
         tasks: ['compass:server', 'autoprefixer']
       },
       gruntfile: {
-        files: ['Gruntfile.js']
+        files: ['Gruntfile.js'],
+        tasks: ['browserify'],
       },
       livereload: {
         options: {
@@ -119,7 +120,8 @@ module.exports = function (grunt) {
       all: {
         src: [
           'Gruntfile.js',
-          '<%= yeoman.app %>/scripts/{,*/}*.js'
+          '<%= yeoman.app %>/scripts/{,*/}*.js',
+          '!*-browser.js'
         ]
       },
       test: {
@@ -387,7 +389,20 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
-    }
+    },
+
+    browserify: {
+      local: {
+        // A single entry point for our app
+        src: 'app/scripts/modules/yql.js',
+        // Compile to a single file to add a script tag for in your HTML
+        dest: 'app/scripts/modules/yql-browser.js',
+
+        options: {
+          tranform: ['brfs']
+        }
+      }
+    },
   });
 
 
@@ -399,6 +414,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
+      //'browserify',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
@@ -422,6 +438,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
+    //'browserify',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',

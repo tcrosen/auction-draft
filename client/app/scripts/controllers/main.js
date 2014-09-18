@@ -36,7 +36,7 @@ angular.module('clientApp')
             return team;
           },
           pool: function() {
-            return $scope.pool
+            return $scope.pool;
           }
         }
       });

@@ -1,43 +1,52 @@
-<div class="panel panel-default current-auction" ng-class="{ 'panel-success': currentAuction.startTime }">
-  <div class="panel-heading">
-    <h3 class="panel-title">Current Auction</h3>
-  </div>
-  <div class="panel-body">
-    <div class="row" ng-show="currentAuction.startTime && currentAuction.player">
-      <div class="col-xs-6 col-sm-4">
-        <h2 class="player-name">{{ currentAuction.player.name }} <small>{{ currentAuction.player.position }}, {{ currentAuction.player.team }}</small></h2>
-        <p>Nominated by: <strong>{{ currentAuction.team.name }}</strong></p>
-        <p>Highest bid: <strong>${{ maxBid.amount }}</strong> by <strong>{{ maxBid.team.name }}</strong></p>
-        <p><a href="" class="btn btn-danger" ng-click="finishAuction()">Finish</a> <a href="" class="btn btn-default" ng-click="cancelAuction()">Cancel</a></p>
+<div class="panel panel-default current-auction">
+  <div class="panel-body" ng-if="currentAuction.startTime && currentAuction.playerId">
+    <div class="row">
+      <div class="col-xs-12">
+        <h2 class="player-name">{{ currentAuction.$player.name }} <small>{{ currentAuction.$player.position }}, {{ currentAuction.$player.team }}</small></h2>
       </div>
-      <div class="col-xs-12 col-sm-8 bid-actions">
-        <p>
-          Bidding as: <label ng-if="!myTeam.isAdmin">{{ myTeam.name }}</label><select ng-if="myTeam.isAdmin" ng-model="bidForm.team" ng-options="team.$id as team.name for team in poolTeams"></select>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <p>Nominated by: <strong>{{ currentAuction.$team.name }}</strong>
         </p>
-        <p>
-          <span>Quick Bid:</span>
+        <p>Highest bid: <strong>${{ currentAuction.$maxBid.amount }}</strong> by <strong>{{ currentAuction.$maxBid.$team.name }}</strong>
         </p>
+      </div>
+    </div>
+    <div class="row" ng-show="myTeam.isAdmin">
+      <div class="col-xs-12 col-sm-3 col-sm-offset-4 col-md-2 col-sm-offset-5">
         <p>
-          <a href="" ng-click="submitBid(quickBid)" ng-repeat="quickBid in quickBids() track by quickBid" class="btn btn-success btn-quick-bid">${{ quickBid }}</a>
+          Bidding as:
+          <select ng-if="myTeam.isAdmin" class="form-control" ng-model="bidForm.team" ng-options="team.$id as team.name for team in poolTeams"></select>
         </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <p>
+          <span>Quick Bid:</span>  <a href="" ng-click="submitBid(quickBid)" ng-repeat="quickBid in quickBids() track by quickBid" class="btn btn-success btn-lg btn-quick-bid">${{ quickBid }}</a>
+        </p>
+      </div>
+      <div class="col-xs-12 col-sm-4 col-sm-offset-4">
         <div class="input-group">
           <span class="input-group-addon">$</span>
           <input type="text" class="form-control" ng-model="bidForm.amount" ng-bind="bidForm.amount">
           <span class="input-group-btn">
-            <button class="btn btn-default" type="button" ng-click="submitBid()">Submit Bid</button>
-          </span>
+              <button class="btn btn-default" type="button" ng-click="submitBid()">Submit Bid</button>
+            </span>
         </div>
       </div>
     </div>
-    <div class="row" ng-show="currentAuction.startTime && !currentAuction.player">
+  </div>
+  <div class="panel-body" ng-if="currentAuction.startTime && !currentAuction.playerId">
+    <div class="row">
       <div class="col-xs-12">
-        <p>On the clock: {{ currentAuction.team.name }} as of {{ moment(currentAuction.startTime).fromNow() }}</p>
+        <h2>Waiting for player to be nominated...</h2>
       </div>
     </div>
-    <div class="row" ng-hide="currentAuction.startTime">
-      <div class="col-xs-12">
-        <p>No player is currently up for auction</p>
-      </div>
-    </div>
+  </div>
+  <div class="panel-footer" ng-if="currentAuction.startTime && currentAuction.playerId">
+    <p><a href="" class="btn btn-danger" ng-click="finishAuction()">Finish</a>  <a href="" class="btn btn-default" ng-click="cancelAuction()">Cancel</a>
+    </p>
   </div>
 </div>

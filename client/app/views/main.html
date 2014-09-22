@@ -7,11 +7,11 @@
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-sm-offset-2">
         <div class="list-group claim-team-list">
-          <a href="" ng-click="claimTeam(team)" ng-repeat="team in teams" ng-disabled="!team.isActive" class="list-group-item" ng-class="{ 'list-group-item-success': team.isRegistered }">
-            <h3 class="list-group-item-heading">
+          <a ng-href="#/pools/{{pool.$id}}/draft/{{team.$id}}" ng-repeat="team in teams" ng-disabled="!team.isActive" class="list-group-item" ng-class="{ 'list-group-item-success': team.isRegistered }">
+            <h4 class="list-group-item-heading">
               <span ng-show="team.lastYearRank === 1" class="glyphicon glyphicon-tower"></span>
               <span ng-show="team.lastYearRank === 0" class="glyphicon glyphicon-star"></span>
-              {{ team.name }} <small ng-if="team.isActive">{{ team.seasons + 1 | nth }} season</small><small ng-if="!team.isActive">Inactive</small></h3>
+              {{ team.name }} <small ng-if="team.isActive">{{ team.seasons + 1 | nth }} season</small><small ng-if="!team.isActive">Inactive</small></h4>
             <div class="pull-right" ng-show="team.isRegistered">
               <span class="glyphicon glyphicon-ok"></span> &nbsp;<span class="muted">Registered</span>
             </div>

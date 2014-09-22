@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('MainCtrl', function($scope, $rootScope, pool, loginService, PoolTeamService, $modal) {
+  .controller('MainCtrl', function($scope, $rootScope, pool, loginService, PoolTeamService, $modal, $location) {
 
     $scope.pool = pool;
     $scope.teams = PoolTeamService.syncData;
@@ -28,37 +28,43 @@ angular.module('clientApp')
 
 
     $scope.claimTeam = function(team) {
-      var registerTeamModal = $modal.open({
-        templateUrl: 'views/modals/register-team.html',
-        controller: 'RegisterTeamInstanceCtrl',
-        resolve: {
-          team: function () {
-            return team;
-          },
-          pool: function() {
-            return $scope.pool;
-          }
-        }
-      });
+      $rootScope.user = {
+        name: team.name,
+        team: team
+      };
 
-      registerTeamModal.result.then(function (team) {
-        console.log('Modal team: ', team);
-      });
+      $location.path('/pools/' + pool.$id + '/draft');
 
-      if (team.isActive && !team.isRegistered) {
-        $scope.isClaiming = team.$id;
-
-        console.log('Team: ', team);
-        console.log('Auth: ', $rootScope.auth);
-
-
-        // loginService.createAccount(team.email, team.password).then(function(user) {
-        //   console.log('User created: ', user);
-        // });
-
-
-
-      }
+      // var registerTeamModal = $modal.open({
+      //   templateUrl: 'views/modals/register-team.html',
+      //   controller: 'RegisterTeamInstanceCtrl',
+      //   resolve: {
+      //     team: function () {
+      //       return team;
+      //     },
+      //     pool: function() {
+      //       return $scope.pool;
+      //     }
+      //   }
+      // });
+      //
+      // registerTeamModal.result.then(function (team) {
+      //   console.log('Modal team: ', team);
+      // });
+      //
+      // if (team.isActive && !team.isRegistered) {
+      //   $scope.isClaiming = team.$id;
+      //
+      //   console.log('Team: ', team);
+      //   console.log('Auth: ', $rootScope.auth);
+      //
+      //   // loginService.createAccount(team.email, team.password).then(function(user) {
+      //   //   console.log('User created: ', user);
+      //   // });
+      //
+      //
+      //
+      // }
 
       // loginService.createAccount($scope.email, $scope.pass, function(err, user) {
       //   if (err) {

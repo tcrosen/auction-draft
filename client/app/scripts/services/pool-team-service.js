@@ -110,7 +110,10 @@ angular.module('clientApp').factory('PoolTeamService', function(ENV, firebaseRef
     poolTeamService.ref.remove(function() {
       _.each(teams, function(team) {
         team.poolId = poolId;
-        poolTeamService.syncData.$add(team);
+
+        if (team.isActive) {
+          poolTeamService.syncData.$add(team);
+        }
       });
     });
   };

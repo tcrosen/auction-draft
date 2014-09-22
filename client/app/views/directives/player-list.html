@@ -11,7 +11,7 @@
   </thead>
   <tbody>
     <tr ng-hide="hideDrafted && player.owner"
-        ng-repeat="player in players | orderBy:sort:reverse track by player.id"
+        ng-repeat="player in players | orderBy:sort:reverse"
         ng-class="{ success: player.highlight }">
       <td>{{ player.rank }}</td>
       <td>{{ player.lastName }}, {{ player.firstName }}</td>

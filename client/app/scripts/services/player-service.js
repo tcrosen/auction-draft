@@ -1,31 +1,42 @@
 'use strict';
 
-angular.module('clientApp').factory('PlayerService', function(API) {
+angular.module('clientApp').factory('PlayerService', function($http, ENV, firebaseRef, syncData) {
   var playerService = {};
 
-  playerService._api = new API('/players', [{
-    name: 'import',
-    path: 'import',
-    verb: 'get'
-  }]);
+  playerService.ref = firebaseRef('players');
+  playerService.syncData = syncData('players').$asArray();
 
-  playerService.fetch = function() {
-    return playerService._api.get();
-  };
-
-  playerService.import = function() {
-    return playerService._api.import();
-  };
-
-  playerService.getByDrafted = function(isDrafted) {
-    return playerService.fetch().then(function(players) {
-      return playerService.filterByDrafted(players, isDrafted);
+  playerService.getSeedData = function() {
+    return $http.get('/data/players.json').then(function(resp) {
+      console.log('Players data:', resp.data);
+      return resp.data;
     });
   };
 
-  playerService.getByPosition = function(position) {
-    return playerService.fetch().then(function(players) {
-      return playerService.filterByPosition(players, position);
+  playerService.seed = function() {
+    return playerService.getSeedData().then(function(playerData) {
+      var players = playerService.parseYahooJson(playerData);
+
+      playerService.ref.remove(function() {
+        _.each(players, function(player) {
+          playerService.syncData.$add(player);
+        });
+      });
+    });
+  };
+
+  playerService.parseYahooJson = function(data) {
+    var players = data.results.players;
+    var i = 1;
+
+    return _.map(players, function(player) {
+      player.positions = player.position.split(',');
+      player.firstName = player.name.split(' ')[0].trim();
+      player.lastName = player.name.replace(player.firstName, '').trim();
+      player.averageDraftRank = parseFloat(player.rank);
+      player.rank = i;
+      i++;
+      return player;
     });
   };
 

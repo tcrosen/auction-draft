@@ -46,12 +46,12 @@ angular
           }
         }
       })
-      .when('/draft/:id', {
+      .when('/pools/:poolId/draft', {
         templateUrl: 'views/draft.html',
         controller: 'DraftCtrl',
         resolve: {
           pool: function($route, PoolService) {
-            return PoolService.single($route.current.params.id);
+            return PoolService.single($route.current.params.poolId);
           }
         }
       })

@@ -1,6 +1,6 @@
 <ul class="draft-order">
   <li ng-repeat="poolTeam in poolTeams" ng-class="{ 'bg-warning': auction.poolTeam.id === poolTeam.id }">
-    <h4 class="team-name">{{ poolTeam.owner.name }}</h4>
+    <h4 class="team-name">{{ poolTeam.draftOrder }} {{ poolTeam.name }}</h4>
     <div pool-team team="poolTeam" pool="pool" condensed="true" showHeader="false"></div>
   </li>
 </ul>

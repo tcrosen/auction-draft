@@ -17,7 +17,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'firebase',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'drafter'
   ])
   .run(function($rootScope, $location, loginService, ENV) {
     // $rootScope.$on('$firebaseSimpleLogin:login', function(e, user) {

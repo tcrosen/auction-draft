@@ -2,7 +2,7 @@
 
   var extend = $.extend;
 
-  angular.module('drafter')
+  angular.module('drafter', [])
 
   .factory('Auction', function() {
 

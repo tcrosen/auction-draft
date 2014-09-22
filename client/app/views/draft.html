@@ -7,23 +7,12 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-6">
+  <div class="col-xs-12 col-sm-6 col-sm-offset-3">
     <div auction-block auction="currentAuction"></div>
-  </div>
-  <div class="col-xs-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Actions</h3>
-      </div>
-      <div class="panel-body">
-        <a href="" class="btn btn-danger btn-sm" ng-click="randomizeOrder()">Randomize Order</a> <a href="" class="btn btn-danger btn-sm" ng-click="importPlayers()">Import Players</a>
-        <a href="" class="btn btn-danger btn-sm" ng-click="simulateDraft()">Simulate</a>
-      </div>
-    </div>
   </div>
 </div>
 <div class="row">
-  <div class="col-xs-12 col-md-6">
+  <div class="col-xs-12 col-md-12">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">All Players</h3>
@@ -43,16 +32,6 @@
           <li ng-class="{ active: players.filter === 'G' }"><a href="" ng-click="filterPlayers('G')">G <span class="label label-default">{{ draftStats().remaining.g }}</a></li>
         </ul>
         <div player-list players="players.filtered" sort="players.sort" reverse="players.reverse" hide-drafted="players.hideDrafted"></div>
-      </div>
-    </div>
-  </div>
-  <div class="col-xs-12 col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">{{ poolTeams[0].name }}</h3>
-      </div>
-      <div class="panel-body">
-        <div pool-team team="poolTeams[0]" pool="pool"></div>
       </div>
     </div>
   </div>

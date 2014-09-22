@@ -3,11 +3,11 @@
     <h3 class="panel-title">Current Auction</h3>
   </div>
   <div class="panel-body">
-    <div class="row" ng-show="auction.player">
+    <div class="row" ng-show="currentAuction.startTime && currentAuction.player">
       <div class="col-xs-6 col-sm-4">
-        <h2 class="player-name">{{ auction.player.name }} <small>{{ auction.player.position }}, {{ auction.player.team }}</small></h2>
-        <p>Nominated by: <strong>{{ auction.entry.name }}</strong></p>
-        <p>Highest bid: <strong>${{ auction.highestBid().amount }}</strong> by <strong>{{ auction.highestBid().entry.name }}</strong></p>
+        <h2 class="player-name">{{ currentAuction.player.name }} <small>{{ currentAuction.player.position }}, {{ currentAuction.player.team }}</small></h2>
+        <p>Nominated by: <strong>{{ currentAuction.entry.name }}</strong></p>
+        <p>Highest bid: <strong>${{ currentAuction.highestBid().amount }}</strong> by <strong>{{ currentAuction.highestBid().entry.name }}</strong></p>
         <p><a href="" class="btn btn-success" ng-click="finishAuction()">Finish</a> <a href="" class="btn btn-default" ng-click="cancelAuction()">Cancel</a></p>
       </div>
       <div class="col-xs-12 col-sm-8 bid-actions">
@@ -26,7 +26,12 @@
         </div>
       </div>
     </div>
-    <div class="row" ng-hide="auction.player">
+    <div class="row" ng-show="currentAuction.startTime && !currentAuction.player">
+      <div class="col-xs-12">
+        <p>On the clock: {{ currentAuction.team.name }} as of {{ moment(currentAuction.startTime).fromNow() }}</p>
+      </div>
+    </div>
+    <div class="row" ng-hide="currentAuction.startTime">
       <div class="col-xs-12">
         <p>No player is currently up for auction</p>
       </div>

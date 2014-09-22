@@ -1,4 +1,4 @@
-<div class="panel panel-default current-auction">
+<div class="panel panel-default current-auction" ng-class="{ 'panel-success': currentAuction.startTime }">
   <div class="panel-heading">
     <h3 class="panel-title">Current Auction</h3>
   </div>
@@ -6,8 +6,8 @@
     <div class="row" ng-show="currentAuction.startTime && currentAuction.player">
       <div class="col-xs-6 col-sm-4">
         <h2 class="player-name">{{ currentAuction.player.name }} <small>{{ currentAuction.player.position }}, {{ currentAuction.player.team }}</small></h2>
-        <p>Nominated by: <strong>{{ currentAuction.entry.name }}</strong></p>
-        <p>Highest bid: <strong>${{ currentAuction.highestBid().amount }}</strong> by <strong>{{ currentAuction.highestBid().entry.name }}</strong></p>
+        <p>Nominated by: <strong>{{ currentAuction.team.name }}</strong></p>
+        <p>Highest bid: <strong>${{ maxBid.amount }}</strong> by <strong>{{ maxBid.team.name }}</strong></p>
         <p><a href="" class="btn btn-success" ng-click="finishAuction()">Finish</a> <a href="" class="btn btn-default" ng-click="cancelAuction()">Cancel</a></p>
       </div>
       <div class="col-xs-12 col-sm-8 bid-actions">

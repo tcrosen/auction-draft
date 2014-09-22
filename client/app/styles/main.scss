@@ -39,6 +39,16 @@ body {
   padding: 8px 0;
   background-color: #eee;
   text-align: center;
+  font-weight: normal;
+}
+
+.draft-order > li.active {
+  border: 2px solid #333;
+}
+
+.draft-order > li.active .team-name {
+  font-weight: bold;
+  background-color: #fbff7f;
 }
 
 .player-filters {

@@ -22,6 +22,7 @@
     "angular": false,
     "_": false,
     "Firebase": true,
-    "sails": true
+    "sails": true,
+    "moment": true
   }
 }

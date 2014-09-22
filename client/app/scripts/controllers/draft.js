@@ -3,29 +3,61 @@
 angular.module('clientApp')
   .controller('DraftCtrl', function($scope, $rootScope, ENV, $firebase) {
 
-    var baseRef = ENV.firebaseRef;
-    var poolsRef = baseRef.child('pools');
-    var poolsSync = $firebase(poolsRef);
-    var poolRef = poolsRef.child('-JWfYHPR-7z28GrRKaRv');
-    var poolSync = $firebase(poolRef);
-    var poolTeamsRef = baseRef.child('poolTeams');
-    var poolTeamsSync = $firebase(poolTeamsRef);
-    var playersRef = baseRef.child('players');
-    var playersSync = $firebase(playersRef);
-    var usersRef = baseRef.child('users');
-    var usersSync = $firebase(usersRef);
-    var auctionsRef = baseRef.child('auctions');
-    var auctionsSync = $firebase(auctionsRef);
-    var unwatchCurrentAuction;
+    var baseRef = ENV.firebaseRef,
+      poolsRef = baseRef.child('pools'),
+      poolsSync = $firebase(poolsRef),
+      poolRef = poolsRef.child('-JWfYHPR-7z28GrRKaRv'),
+      poolSync = $firebase(poolRef),
+      poolTeamsRef = baseRef.child('poolTeams'),
+      poolTeamsSync = $firebase(poolTeamsRef),
+      playersRef = baseRef.child('players'),
+      playersSync = $firebase(playersRef),
+      usersRef = baseRef.child('users'),
+      usersSync = $firebase(usersRef),
+      auctionsRef = baseRef.child('auctions'),
+      auctionsSync = $firebase(auctionsRef),
+      auctionRef,
+      auctionSync,
+      bidsRef,
+      bidsSync,
+      unwatchCurrentBids,
+      unwatchCurrentAuction;
+
+    var now = function() {
+      return moment().format();
+    };
+
+    var sortTeams = function() {
+      function compare(a, b) {
+        return a.draftOrder - b.draftOrder;
+      }
+
+      $scope.poolTeams.sort(compare);
+    };
 
     var setCurrentAuction = function(auctionId) {
-      var auctionRef = auctionsRef.child(auctionId);
-      $scope.currentAuction = $firebase(auctionRef).$asObject();
-      // console.log('Current auction set: ', $scope.currentAuction);
+      auctionRef = auctionsRef.child(auctionId);
+      auctionSync = $firebase(auctionRef);
+      bidsRef = auctionRef.child('bids');
+      bidsSync = $firebase(bidsRef);
+
+      $scope.currentAuction = auctionSync.$asObject();
+      $scope.currentBids = bidsSync.$asArray();
 
       unwatchCurrentAuction = $scope.currentAuction.$watch(function(event) {
         $scope.currentAuction.team = $scope.poolTeams.$getRecord($scope.currentAuction.teamId);
         console.log('Current auction set: ', $scope.currentAuction);
+      });
+
+      unwatchCurrentBids = $scope.currentBids.$watch(function(event) {
+        console.log('Bids set: ', $scope.currentBids);
+        _.map($scope.currentBids, function(bid) {
+          bid.team = $scope.poolTeams.$getRecord($scope.currentAuction.teamId);
+          return bid;
+        });
+
+        $scope.maxBid = _.max($scope.currentBids, 'amount');
+        console.log('Max bid: ', $scope.maxBid);
       });
     };
 
@@ -35,7 +67,231 @@ angular.module('clientApp')
     $scope.poolTeams = poolTeamsSync.$asArray();
     $scope.auctions = auctionsSync.$asArray();
     $scope.moment = moment;
+    
+    // Draft in progress methods
+    $scope.startAuction = function(draftOrderIndex) {
+      var teamToNominate = $scope.poolTeams.$keyAt(draftOrderIndex);
 
+      $scope.auctions.$add({
+        teamId: teamToNominate,
+        startTime: now()
+      }).then(function(ref) {
+        console.log('Auction created: ', ref.name());
+        setCurrentAuction(ref.name());
+      });
+    };
+
+    $scope.cancelAuction = function() {
+      unwatchCurrentAuction();
+    };
+
+    $scope.endAuction = function() {
+      unwatchCurrentAuction();
+    };
+
+    $scope.nominatePlayer = function(player) {
+      $scope.currentAuction.player = player;
+      $scope.currentAuction.$save().then(function() {
+        $scope.addBid($scope.currentAuction.teamId, $scope.pool.settings.minBid);
+      });
+    };
+
+    $scope.addBid = function(teamId, amount) {
+      $scope.currentBids.$add({
+        teamId: teamId,
+        amount: amount,
+        time: now()
+      });
+    };
+
+    $scope.resetDraft = function() {
+      if ($scope.pool.isDraftStarted) {
+        if (unwatchCurrentBids) {
+          unwatchCurrentBids();
+        }
+
+        if (unwatchCurrentAuction) {
+          unwatchCurrentAuction();
+        }
+
+        $scope.pool.isDraftStarted = false;
+        $scope.pool.draftStartTime = null;
+        $scope.pool.$save();
+
+        $scope.seedTeams();
+
+        auctionsSync.$remove().then(function() {
+          console.log('Auctions deleted');
+        });
+      }
+    };
+
+    $scope.endDraft = function() {
+      if ($scope.pool.isDraftStarted) {
+        $scope.pool.isDraftStarted = false;
+        $scope.pool.isDraftEnded = true;
+        $scope.pool.draftEndTime = now();
+        $scope.pool.$save();
+      }
+    };
+
+    $scope.getMaxBid = function() {
+      if ($scope.currentBids) {
+        console.log('highest bid: ', _.max($scope.currentBids, 'amount'));
+        return _.max($scope.currentBids, 'amount');
+      }
+    };
+
+    $scope.draftPlayer = function(entry, player) {
+      $scope.draft.draftPlayer(entry, player).then(function(resp) {
+        console.log(resp);
+        //getPlayers();
+      });
+    };
+
+    $scope.hideDrafted = function() {
+      $scope.players.hideDrafted = !$scope.players.hideDrafted;
+    };
+
+    $scope.filterPlayers = function(position) {
+      $scope.players.filter = position;
+
+      if (position) {
+        $scope.players.filtered = $scope.filterPlayersByPosition($scope.players.all, position);
+      } else {
+        $scope.players.filtered = $scope.players.all;
+      }
+    };
+
+    $scope.quickBids = function() {
+      var quickBids = [],
+        highestBid,
+        highestBidAmount,
+        nextTenth,
+        i, j;
+
+      //highestBid = $scope.getHighestBid($scope.currentAuction);
+
+      if (highestBid) {
+        highestBidAmount = highestBid.amount;
+
+        if (highestBidAmount < 50) {
+          for (i = 1; i <= 9; i++) {
+            quickBids.push(highestBidAmount + i);
+          }
+        }
+      }
+
+      return quickBids;
+    };
+
+    $scope.showNominate = function(player) {
+      return $scope.draft && !$scope.draft.currentAuction.player && !player.owner;
+    };
+
+    $scope.submitBid = function(amount) {
+      var bid = amount || $scope.user.bid;
+
+      // TODO: associate current user and get entry
+      var entry = _.sample($scope.poolTeams);
+
+      $scope.draft.currentAuction.addBid(entry, bid);
+    };
+
+    $scope.importPlayers = function() {};
+
+    $scope.simulateDraft = function() {
+      _.each($scope.poolTeams, function(poolTeam) {
+        _.map(poolTeam.roster, function(rosterSpot) {
+          var player = _.sample($scope.players.filtered);
+          var cost = Math.floor(Math.random() * (300 - 1)) + 1;
+          var nameSplit = player.name.split(' '),
+            shortName;
+
+          if (nameSplit.length > 2) {
+            shortName = player.name.split(' ')[1] + ' ' + player.name.split(' ')[2] + ', ' + player.name.split(' ')[0].substr(0, 1);
+          } else {
+            shortName = player.name.split(' ')[1] + ', ' + player.name.split(' ')[0].substr(0, 1);
+          }
+
+          player.owner = poolTeam.owner;
+          player.cost = cost;
+          player.shortName = shortName;
+
+          rosterSpot.player = player;
+          rosterSpot.cost = cost;
+        });
+      });
+    };
+
+    $scope.filterPlayersByDrafted = function(players, isDrafted) {
+      return _.filter(players, function(player) {
+        return player;
+      });
+    };
+
+    $scope.filterPlayersByPosition = function(players, position) {
+      return _.filter(players, function(player) {
+        return player.positions.indexOf(position) >= 0;
+      });
+    };
+
+    $scope.getLatestAuctionKey = function() {
+      return $scope.auctions.$keyAt($scope.auctions.length - 1);
+    };
+
+    $scope.pool.$loaded().then(function(pool) {
+      console.log('Pool loaded: ', pool);
+    });
+
+    $scope.auctions.$loaded().then(function(auctions) {
+      console.log('Auctions loaded: ', auctions);
+
+      if ($scope.pool.isDraftStarted) {
+        setCurrentAuction($scope.getLatestAuctionKey());
+      }
+    });
+
+    $scope.poolTeams.$loaded().then(function(poolTeams) {
+      console.log('Teams loaded: ', poolTeams);
+      sortTeams();
+    });
+
+    $scope.poolTeams.$watch(function(event) {
+      sortTeams();
+    });
+
+    $scope.playersList.$loaded().then(function(players) {
+      console.log('Players loaded: ', players);
+
+      $scope.players = {
+        all: players,
+        filtered: players,
+        filter: null,
+        hideDrafted: false,
+        sort: 'rank',
+        reverse: false
+      };
+
+      $scope.draftStats = function() {
+        var players = $scope.players.all,
+          undrafted = $scope.filterPlayersByDrafted(players, false),
+          byPosition = $scope.filterPlayersByPosition;
+
+        return {
+          remaining: {
+            total: undrafted.length,
+            c: byPosition(undrafted, 'C').length,
+            lw: byPosition(undrafted, 'LW').length,
+            rw: byPosition(undrafted, 'RW').length,
+            d: byPosition(undrafted, 'D').length,
+            g: byPosition(undrafted, 'G').length
+          }
+        };
+      };
+    });
+
+    // Pre draft methods
     $scope.seedTeams = function() {
       var teams = [{
         email: '',
@@ -139,16 +395,24 @@ angular.module('clientApp')
 
       poolTeamsSync.$remove().then(function() {
         _.each(teams, function(team) {
-          team.poolId = $scope.pool.$id;
-
           if (team.isActive) {
+            team.poolId = $scope.pool.$id;
+            team.roster = [];
+
+            _.each($scope.pool.settings.roster.split(','), function(position) {
+              team.roster.push({
+                position: position,
+                player: null,
+                cost: null
+              });
+            });
+
             poolTeamsSync.$push(team);
           }
         });
       });
     };
 
-    // Pre draft methods
     $scope.randomizeOrder = function() {
       if (!$scope.pool.isDraftStarted) {
         var shuffled = _.shuffle($scope.poolTeams);
@@ -165,212 +429,12 @@ angular.module('clientApp')
 
     $scope.startDraft = function() {
       if (!$scope.pool.isDraftStarted) {
+
         $scope.pool.isDraftStarted = true;
-        $scope.pool.draftStartTime = new Date();
+        $scope.pool.draftStartTime = now();
         $scope.pool.$save();
 
-        $scope.startAuction($scope.poolTeams.$keyAt(0));
+        $scope.startAuction(0);
       }
     };
-
-    $scope.startAuction = function(teamId) {
-      $scope.auctions.$add({
-        teamId: teamId,
-        startTime: moment().format()
-      }).then(function(ref) {
-        console.log('Auction created: ', ref.name());
-        setCurrentAuction(ref.name());
-      });
-    };
-
-    $scope.endAuction = function() {
-      unwatchCurrentAuction();
-    };
-
-    $scope.resetDraft = function() {
-      if ($scope.pool.isDraftStarted) {
-        $scope.pool.isDraftStarted = false;
-        $scope.pool.draftStartTime = null;
-        $scope.pool.$save();
-
-        $scope.seedTeams();
-
-        auctionsSync.$remove().then(function() {
-          console.log('Auctions deleted');
-        });
-      }
-    };
-
-    $scope.endDraft = function() {
-      if ($scope.pool.isDraftStarted) {
-        $scope.pool.isDraftStarted = false;
-        $scope.pool.isDraftEnded = true;
-        $scope.pool.draftEndTime = new Date();
-        $scope.pool.$save();
-      }
-    };
-
-    // Draft in progress methods
-    $scope.nominatePlayer = function(player) {
-    };
-
-    $scope.draftPlayer = function(entry, player) {
-      $scope.draft.draftPlayer(entry, player).then(function(resp) {
-        console.log(resp);
-        //getPlayers();
-      });
-    };
-
-    $scope.hideDrafted = function() {
-      $scope.players.hideDrafted = !$scope.players.hideDrafted;
-    };
-
-    $scope.filterPlayers = function(position) {
-      $scope.players.filter = position;
-
-      if (position) {
-        $scope.players.filtered = $scope.filterPlayersByPosition($scope.players.all, position);
-      } else {
-        $scope.players.filtered = $scope.players.all;
-      }
-    };
-
-    $scope.quickBids = function() {
-      var quickBids = [],
-        highestBid,
-        nextTenth,
-        i, j;
-
-      if ($scope.draft && $scope.draft.currentAuction && $scope.draft.currentAuction.highestBid().amount) {
-        highestBid = $scope.draft.currentAuction.highestBid().amount;
-
-        if (highestBid < 50) {
-          for (i = 1; i <= 9; i++) {
-            quickBids.push(highestBid + i);
-          }
-        }
-
-        nextTenth = (highestBid + i) - ((highestBid + i) % 10);
-
-        console.log('next tenth: ', nextTenth);
-        console.log('i: ', i);
-        console.log('highest bid: ', highestBid);
-        // if (nextTenth < highestBid + 15) {
-        //   nextTenth = 20;
-        // }
-
-        for (j = nextTenth; j <= nextTenth + 30; j += 5) {
-          //quickBids.push(j);
-          console.log('j', j);
-        }
-      }
-
-      return quickBids;
-    };
-
-    $scope.showNominate = function(player) {
-      return $scope.draft && !$scope.draft.currentAuction.player && !player.owner;
-    };
-
-    $scope.submitBid = function(amount) {
-      var bid = amount || $scope.user.bid;
-
-      // TODO: associate current user and get entry
-      var entry = _.sample($scope.poolTeams);
-
-      $scope.draft.currentAuction.addBid(entry, bid);
-    };
-
-    $scope.importPlayers = function() {
-    };
-
-    $scope.simulateDraft = function() {
-      _.each($scope.poolTeams, function(poolTeam) {
-        _.map(poolTeam.roster, function(rosterSpot) {
-          var player = _.sample($scope.players.filtered);
-          var cost = Math.floor(Math.random() * (300 - 1)) + 1;
-          var nameSplit = player.name.split(' '),
-            shortName;
-
-          if (nameSplit.length > 2) {
-            shortName = player.name.split(' ')[1] + ' ' + player.name.split(' ')[2] + ', ' + player.name.split(' ')[0].substr(0, 1);
-          } else {
-            shortName = player.name.split(' ')[1] + ', ' + player.name.split(' ')[0].substr(0, 1);
-          }
-
-          player.owner = poolTeam.owner;
-          player.cost = cost;
-          player.shortName = shortName;
-
-          rosterSpot.player = player;
-          rosterSpot.cost = cost;
-        });
-      });
-    };
-
-    $scope.filterPlayersByDrafted = function(players, isDrafted) {
-      return _.filter(players, function(player) {
-        return player;
-      });
-    };
-
-    $scope.filterPlayersByPosition = function(players, position) {
-      return _.filter(players, function(player) {
-        return player.positions.indexOf(position) >= 0;
-      });
-    };
-
-    $scope.pool.$loaded().then(function(pool) {
-      console.log('Pool loaded: ', pool);
-    });
-
-    $scope.auctions.$loaded().then(function(auctions) {
-      console.log('Auctions loaded: ', auctions);
-
-      if ($scope.pool.isDraftStarted) {
-        setCurrentAuction($scope.auctions.$keyAt($scope.auctions.length - 1));
-      }
-    });
-
-    $scope.poolTeams.$loaded().then(function(poolTeams) {
-      console.log('Teams loaded: ', poolTeams);
-    });
-
-    $scope.poolTeams.$watch(function(event) {
-      function compare(a, b) {
-        return a.draftOrder - b.draftOrder;
-      }
-
-      $scope.poolTeams.sort(compare);
-    });
-
-    $scope.playersList.$loaded().then(function(players) {
-      console.log('Players loaded: ', players);
-
-      $scope.players = {
-        all: players,
-        filtered: players,
-        filter: null,
-        hideDrafted: false,
-        sort: 'rank',
-        reverse: false
-      };
-
-      $scope.draftStats = function() {
-        var players = $scope.players.all,
-          undrafted = $scope.filterPlayersByDrafted(players, false),
-          byPosition = $scope.filterPlayersByPosition;
-
-        return {
-          remaining: {
-            total: undrafted.length,
-            c: byPosition(undrafted, 'C').length,
-            lw: byPosition(undrafted, 'LW').length,
-            rw: byPosition(undrafted, 'RW').length,
-            d: byPosition(undrafted, 'D').length,
-            g: byPosition(undrafted, 'G').length
-          }
-        };
-      };
-    });
   });

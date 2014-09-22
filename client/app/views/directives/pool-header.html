@@ -1,22 +1,29 @@
 <nav class="navbar navbar-default" role="navigation">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">{{ pool.name }}</a>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="" ng-click="seedTeams()" ng-if="!pool.isDraftStarted">Reset Teams</a></li>
-        <li><a href="" ng-click="randomizeOrder()" ng-if="!pool.isDraftStarted">Randomize Order</a></li>
-        <li><a href="" ng-click="importPlayers()" ng-if="!pool.isDraftStarted">Import Players</a></li>
-        <li><a href="" ng-click="simulateDraft()" ng-if="!pool.isDraftStarted">Simulate</a></li>
-        <li><a href="" ng-click="startDraft()" ng-if="!pool.isDraftStarted">Start Draft</a></li>
-        <li><a href="" ng-click="resetDraft()" ng-if="pool.isDraftStarted">Reset Draft</a></li>
-        <li><a href="" ng-click="endDraft()" ng-if="pool.isDraftStarted">End Draft</a></li>
-      </ul>
-    </div>
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="#">{{ pool.name }}</a>
+  </div>
+  
+  <div class="collapse navbar-collapse" id="navbar-collapse-1">
+    <ul class="nav navbar-nav navbar-left">
+      <li><a href="" ng-click="seedTeams()" ng-if="!pool.isDraftStarted">Reset Teams</a></li>
+      <li><a href="" ng-click="randomizeOrder()" ng-if="!pool.isDraftStarted">Randomize Order</a></li>
+      <li><a href="" ng-click="importPlayers()" ng-if="!pool.isDraftStarted">Import Players</a></li>
+      <li><a href="" ng-click="simulateDraft()" ng-if="!pool.isDraftStarted">Simulate</a></li>
+      <li><a href="" ng-click="startDraft()" ng-if="!pool.isDraftStarted">Start Draft</a></li>
+      <li><a href="" ng-click="resetDraft()" ng-if="pool.isDraftStarted">Reset Draft</a></li>
+      <li><a href="" ng-click="endDraft()" ng-if="pool.isDraftStarted">End Draft</a></li>
+    </ul>
+    <form class="navbar-form navbar-right" role="form">
+      <div class="form-group">
+        <label>My team:</label>
+        <select ng-model="myTeam" ng-change="setMyTeam()" ng-options="team.name for team in poolTeams" class="form-control"></select>
+      </div>
+    </form>
   </div>
 </nav>

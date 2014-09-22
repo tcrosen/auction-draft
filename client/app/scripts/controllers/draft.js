@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('DraftCtrl', function($scope, $rootScope, ENV, $firebase) {
+  .controller('DraftCtrl', function($scope, $rootScope, $location, $routeParams, ENV, $firebase) {
 
     var baseRef = ENV.firebaseRef,
       poolsRef = baseRef.child('pools'),
@@ -67,6 +67,9 @@ angular.module('clientApp')
     $scope.poolTeams = poolTeamsSync.$asArray();
     $scope.auctions = auctionsSync.$asArray();
     $scope.moment = moment;
+    $scope.bidForm = {
+      team: $routeParams.teamId
+    };
 
     // Draft in progress methods
     $scope.startAuction = function(draftOrderIndex) {
@@ -128,6 +131,12 @@ angular.module('clientApp')
 
         auctionsSync.$remove().then(function() {
           console.log('Auctions deleted');
+
+          if ($routeParams.teamId) {
+            // If they are routed here as a team, the ID will no longer work.
+            // Redirect back to original draft page
+            $location.path('/pools/' + $scope.pool.$id + '/draft');
+          }
         });
       }
     };
@@ -200,13 +209,13 @@ angular.module('clientApp')
       }
 
       var bidAmount = parseInt(amount || $scope.bidForm.amount, 10);
-      var bidTeam = $scope.bidForm.team;
+      var bidTeamId = $scope.bidForm.team;
 
       if (bidAmount <= $scope.maxBid.amount) {
         alert('Bid must be greater than ' + $scope.maxBid.amount);
         $scope.bidForm.amount = $scope.maxBid.amount + 1;
       } else {
-        $scope.addBid(bidTeam.$id, bidAmount);
+        $scope.addBid(bidTeamId, bidAmount);
         $scope.bidForm.amount = '';
       }
 
@@ -254,6 +263,10 @@ angular.module('clientApp')
       return $scope.auctions.$keyAt($scope.auctions.length - 1);
     };
 
+    $scope.setMyTeam = function() {
+      $location.path($location.path() + '/' + $scope.myTeam.$id);
+    };
+
     $scope.pool.$loaded().then(function(pool) {
       console.log('Pool loaded: ', pool);
     });
@@ -269,6 +282,10 @@ angular.module('clientApp')
     $scope.poolTeams.$loaded().then(function(poolTeams) {
       console.log('Teams loaded: ', poolTeams);
       sortTeams();
+
+      if ($routeParams.teamId) {
+        $scope.myTeam = $scope.poolTeams.$getRecord($routeParams.teamId);
+      }
     });
 
     $scope.poolTeams.$watch(function(event) {
@@ -422,6 +439,12 @@ angular.module('clientApp')
             });
 
             poolTeamsSync.$push(team);
+
+            if ($routeParams.teamId) {
+              // If they are routed here as a team, the ID will no longer work.
+              // Redirect back to original draft page
+              $location.path('/pools/' + $scope.pool.$id + '/draft');
+            }
           }
         });
       });

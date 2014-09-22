@@ -48,12 +48,11 @@ angular
       })
       .when('/pools/:poolId/draft', {
         templateUrl: 'views/draft.html',
-        controller: 'DraftCtrl',
-        resolve: {
-          pool: function($route, PoolService) {
-            return PoolService.single($route.current.params.poolId);
-          }
-        }
+        controller: 'DraftCtrl'
+      })
+      .when('/pools/:poolId/draft/:teamId', {
+        templateUrl: 'views/draft.html',
+        controller: 'DraftCtrl'
       })
       .otherwise({
         redirectTo: '/'

@@ -26,12 +26,16 @@ body {
 
 .draft-order > li {
   display: table-cell;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  border-right: 2px solid #fff;
+  border-top: 0;
+  border-bottom: 0;
+  border: 3px solid #fff;
 }
 
 .draft-order > li:first-child {
+}
+
+.draft-order > li table.pool-team {
+  margin: 0;
 }
 
 .draft-order > li .team-name {
@@ -42,13 +46,41 @@ body {
   font-weight: normal;
 }
 
-.draft-order > li.active {
-  border: 2px solid #333;
+.draft-order > li .team-draft-order {
+  text-align: center;
+  font-weight: normal;
+}
+
+.draft-order > li .team-icon {
+  text-align: center;
+  font-size: 24px;
+  padding: 6px;
+}
+
+.draft-order > li.nominating-team {
+  border: 3px solid #31708f;
+}
+
+.draft-order > li.winning-team {
+  border: 3px solid #3c763d;
+}
+
+.draft-order > li .team-icon .glyphicon {
+  color: #fff;
+}
+
+.draft-order > li.nominating-team .team-icon .nominating-team {
+  color: #31708f;
+  opacity: 1;
+}
+
+.draft-order > li.winning-team .team-icon .winning-team {
+  color: #3c763d;
+  opacity: 1;
 }
 
 .draft-order > li.active .team-name {
   font-weight: bold;
-  background-color: #fbff7f;
 }
 
 .player-filters {

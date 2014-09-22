@@ -1,6 +1,10 @@
 <ul class="draft-order">
-  <li ng-repeat="poolTeam in poolTeams track by poolTeam.$id" ng-class="{ 'active': currentAuction.teamId === poolTeam.$id }">
-    <h6>{{ poolTeam.draftOrder }}</h6>
+  <li ng-repeat="poolTeam in poolTeams track by poolTeam.$id" ng-class="{ 'nominating-team': currentAuction.teamId === poolTeam.$id, 'winning-team': maxBid.teamId === poolTeam.$id }">
+    <div class="team-icon">
+      <span class="glyphicon glyphicon-bullhorn nominating-team"></span>
+      <span class="glyphicon glyphicon-usd winning-team"></span>
+    </div>
+    <h5 class="team-draft-order">{{ poolTeam.draftOrder }}</h5>
     <h4 class="team-name">{{ poolTeam.name }}</h4>
     <div pool-team team="poolTeam" condensed="true" showHeader="false"></div>
   </li>

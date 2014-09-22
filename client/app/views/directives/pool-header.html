@@ -8,9 +8,9 @@
     </button>
     <a class="navbar-brand" href="#">{{ pool.name }}</a>
   </div>
-  
+
   <div class="collapse navbar-collapse" id="navbar-collapse-1">
-    <ul class="nav navbar-nav navbar-left">
+    <ul class="nav navbar-nav navbar-left" ng-if="myTeam.isAdmin">
       <li><a href="" ng-click="seedTeams()" ng-if="!pool.isDraftStarted">Reset Teams</a></li>
       <li><a href="" ng-click="randomizeOrder()" ng-if="!pool.isDraftStarted">Randomize Order</a></li>
       <li><a href="" ng-click="importPlayers()" ng-if="!pool.isDraftStarted">Import Players</a></li>

@@ -12,7 +12,7 @@
       </div>
       <div class="col-xs-12 col-sm-8 bid-actions">
         <p>
-          Bidding as: <select ng-model="bidForm.team" ng-options="team.$id as team.name for team in poolTeams"></select>
+          Bidding as: <label ng-if="!myTeam.isAdmin">{{ myTeam.name }}</label><select ng-if="myTeam.isAdmin" ng-model="bidForm.team" ng-options="team.$id as team.name for team in poolTeams"></select>
         </p>
         <p>
           <span>Quick Bid:</span>

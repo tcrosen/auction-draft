@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('DraftCtrl', function($scope, $rootScope, $location, $routeParams, ENV, $firebase) {
+  .controller('DraftCtrl', function($scope, $rootScope, $location, $routeParams, $timeout, ENV, $firebase) {
 
     var baseRef = ENV.firebaseRef,
       poolsRef = baseRef.child('pools'),
@@ -75,6 +75,10 @@ angular.module('clientApp')
     $scope.startAuction = function(draftOrderIndex) {
       var teamToNominate = $scope.poolTeams.$keyAt(draftOrderIndex);
 
+      $scope.currentAuction = null;
+      $scope.currentBids = null;
+      $scope.maxBid = null;
+
       $scope.auctions.$add({
         teamId: teamToNominate,
         startTime: now()
@@ -85,11 +89,35 @@ angular.module('clientApp')
     };
 
     $scope.cancelAuction = function() {
+      unwatchCurrentBids();
       unwatchCurrentAuction();
     };
 
-    $scope.endAuction = function() {
-      unwatchCurrentAuction();
+    $scope.finishAuction = function() {
+      $scope.currentAuction.endTime = now();
+
+      var winningTeam = $scope.poolTeams.$getRecord($scope.maxBid.teamId);
+      var nominatingTeam = $scope.currentAuction.team;
+
+      var availableRosterSpot = _.find(winningTeam.roster, function(rosterSpot) {
+        console.log(rosterSpot);
+        return !rosterSpot.player;
+        //return !rosterSpot.player && $scope.currentAuction.player.positions.indexOf(rosterSpot.position) > 0;
+      });
+
+      console.log('roster spot:', availableRosterSpot);
+
+      availableRosterSpot.player = $scope.currentAuction.player;
+      availableRosterSpot.cost = $scope.maxBid.amount;
+
+      $scope.poolTeams.$save(winningTeam).then(function() {
+        unwatchCurrentBids();
+        unwatchCurrentAuction();
+
+        $timeout(function() {
+          $scope.startAuction(nominatingTeam.draftOrder);
+        });
+      });
     };
 
     $scope.nominatePlayer = function(player) {
@@ -147,13 +175,6 @@ angular.module('clientApp')
         $scope.pool.isDraftEnded = true;
         $scope.pool.draftEndTime = now();
         $scope.pool.$save();
-      }
-    };
-
-    $scope.getMaxBid = function() {
-      if ($scope.currentBids) {
-        console.log('highest bid: ', _.max($scope.currentBids, 'amount'));
-        return _.max($scope.currentBids, 'amount');
       }
     };
 
@@ -264,7 +285,7 @@ angular.module('clientApp')
     };
 
     $scope.setMyTeam = function() {
-      $location.path($location.path() + '/' + $scope.myTeam.$id);
+      $location.path('/pools/' + $scope.pool.$id + '/draft/' + $scope.myTeam.$id);
     };
 
     $scope.pool.$loaded().then(function(pool) {
@@ -330,7 +351,8 @@ angular.module('clientApp')
         lastYearRank: 1,
         seasons: 8,
         isActive: true,
-        isRegistered: false
+        isRegistered: false,
+        isAdmin: true
       }, {
         email: '',
         name: 'Loreto',
@@ -351,7 +373,8 @@ angular.module('clientApp')
         lastYearRank: 4,
         seasons: 8,
         isActive: true,
-        isRegistered: false
+        isRegistered: false,
+        isAdmin: true
       }, {
         email: '',
         name: 'Kyle',
@@ -400,7 +423,8 @@ angular.module('clientApp')
         lastYearRank: 11,
         seasons: 8,
         isActive: true,
-        isRegistered: false
+        isRegistered: false,
+        isAdmin: true
       }, {
         email: '',
         name: 'Reg',

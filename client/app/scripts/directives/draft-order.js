@@ -5,7 +5,8 @@ angular.module('clientApp').directive('draftOrder', function($rootScope) {
     templateUrl: 'views/directives/draft-order.html',
     scope: {
       poolTeams: '=',
-      currentAuction: '='
+      currentAuction: '=',
+      maxBid: '='
     },
     link: function(scope) {
     }

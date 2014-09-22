@@ -232,6 +232,8 @@ angular.module('clientApp')
 
         $scope.pool.isDraftStarted = false;
         $scope.pool.draftStartTime = null;
+        $scope.pool.isDraftEnded = false;
+        $scope.pool.draftEndTime = null;
         $scope.pool.$save();
 
         $scope.seedTeams();
@@ -496,10 +498,12 @@ angular.module('clientApp')
       }];
 
       poolTeamsSync.$remove().then(function() {
-        _.each(teams, function(team) {
+        var draftIndex = 1;
+        _.each(_.shuffle(teams), function(team) {
           if (team.isActive) {
             team.poolId = $scope.pool.$id;
             team.roster = [];
+            team.draftOrder = draftIndex;
 
             _.each($scope.pool.settings.roster.split(','), function(position) {
               team.roster.push({
@@ -511,6 +515,7 @@ angular.module('clientApp')
             });
 
             poolTeamsSync.$push(team);
+            draftIndex++;
 
             if ($routeParams.teamId) {
               // If they are routed here as a team, the ID will no longer work.
@@ -525,7 +530,6 @@ angular.module('clientApp')
     $scope.randomizeOrder = function() {
       if (!$scope.pool.isDraftStarted) {
         var shuffled = _.shuffle($scope.poolTeams);
-        var teamToUpdate;
         var order = 1;
 
         _.each(shuffled, function(team) {

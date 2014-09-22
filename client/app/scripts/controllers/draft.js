@@ -41,7 +41,7 @@ angular.module('clientApp')
       auction.$team = $scope.poolTeams.$getRecord(auction.teamId);
       auction.$player = auction.playerId ? $scope.playersList.$getRecord(auction.playerId) : null;
       auction.$bids = parseBids(auction.bids);
-      auction.$maxBid = auction.$bids.length ? _.max(auction.$bids, 'amount') : null;
+      auction.$maxBid = (auction.$bids && auction.$bids.length) ? _.max(auction.$bids, 'amount') : null;
 
       return auction;
     };
@@ -141,13 +141,15 @@ angular.module('clientApp')
       $scope.currentAuction.endTime = now();
 
       var winningTeam = $scope.poolTeams.$getRecord($scope.currentAuction.$maxBid.teamId);
-      var nominatingTeam = $scope.currentAuction.team;
+      var nominatingTeam = $scope.currentAuction.$team;
+      var player = $scope.currentAuction.$player;
+      var winningBid = $scope.currentAuction.$maxBid;
 
       var availableRosterSpots = _.filter(winningTeam.roster, function(rosterSpot) {
         var isActive = rosterSpot.isActive,
             isFilled = !!rosterSpot.player,
-            isPositionMatch = _.contains($scope.currentAuction.player.positions, rosterSpot.position),
-            isPlayerGoalie = _.contains($scope.currentAuction.player.positions, 'G'),
+            isPositionMatch = _.contains(player.positions, rosterSpot.position),
+            isPlayerGoalie = _.contains(player.positions, 'G'),
             isValidForGoalie = rosterSpot.position === 'B',
             isValidForSkater = rosterSpot.position === 'Util' || rosterSpot.position === 'B';
 
@@ -158,7 +160,7 @@ angular.module('clientApp')
 
       if (availableRosterSpots.length) {
         availableRosterSpots[0].player = $scope.currentAuction.$player;
-        availableRosterSpots[0].cost = $scope.currentAu.amount;
+        availableRosterSpots[0].cost = winningBid.amount;
       } else {
         // The standard roster positions are full but they are adding a redundant position.
         // Remove the first available D spot and add an extra bench
@@ -179,7 +181,7 @@ angular.module('clientApp')
         winningTeam.roster.push({
           position: 'B',
           playerId: $scope.currentAuction.playerId,
-          cost: $scope.currentAuction.$maxBid.amount,
+          cost: winningBid.amount,
           isActive: true
         });
       }

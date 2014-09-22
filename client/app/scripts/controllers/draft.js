@@ -52,7 +52,7 @@ angular.module('clientApp')
       unwatchCurrentBids = $scope.currentBids.$watch(function(event) {
         console.log('Bids set: ', $scope.currentBids);
         _.map($scope.currentBids, function(bid) {
-          bid.team = $scope.poolTeams.$getRecord($scope.currentAuction.teamId);
+          bid.team = $scope.poolTeams.$getRecord(bid.teamId);
           return bid;
         });
 
@@ -67,7 +67,7 @@ angular.module('clientApp')
     $scope.poolTeams = poolTeamsSync.$asArray();
     $scope.auctions = auctionsSync.$asArray();
     $scope.moment = moment;
-    
+
     // Draft in progress methods
     $scope.startAuction = function(draftOrderIndex) {
       var teamToNominate = $scope.poolTeams.$keyAt(draftOrderIndex);
@@ -97,6 +97,12 @@ angular.module('clientApp')
     };
 
     $scope.addBid = function(teamId, amount) {
+      console.log('Adding bid: ', {
+        teamId: teamId,
+        amount: amount,
+        time: now()
+      });
+
       $scope.currentBids.$add({
         teamId: teamId,
         amount: amount,
@@ -164,20 +170,18 @@ angular.module('clientApp')
     };
 
     $scope.quickBids = function() {
-      var quickBids = [],
-        highestBid,
-        highestBidAmount,
-        nextTenth,
-        i, j;
+      var quickBids = [], i, bidAmount;
 
-      //highestBid = $scope.getHighestBid($scope.currentAuction);
+      if ($scope.maxBid) {
+        bidAmount = parseInt($scope.maxBid.amount, 10);
 
-      if (highestBid) {
-        highestBidAmount = highestBid.amount;
-
-        if (highestBidAmount < 50) {
+        if ($scope.maxBid.amount < 50) {
           for (i = 1; i <= 9; i++) {
-            quickBids.push(highestBidAmount + i);
+            quickBids.push($scope.maxBid.amount + i);
+          }
+        } else if ($scope.maxBid.amount >= 50) {
+          for (i = 1; i <= 9; i++) {
+            quickBids.push($scope.maxBid.amount + i * 5);
           }
         }
       }
@@ -190,12 +194,22 @@ angular.module('clientApp')
     };
 
     $scope.submitBid = function(amount) {
-      var bid = amount || $scope.user.bid;
+      if (!amount && !$scope.bidForm.amount) {
+        alert('You must enter an amount to bid or click one of the "Quick Bid" buttons');
+        return;
+      }
 
-      // TODO: associate current user and get entry
-      var entry = _.sample($scope.poolTeams);
+      var bidAmount = parseInt(amount || $scope.bidForm.amount, 10);
+      var bidTeam = $scope.bidForm.team;
 
-      $scope.draft.currentAuction.addBid(entry, bid);
+      if (bidAmount <= $scope.maxBid.amount) {
+        alert('Bid must be greater than ' + $scope.maxBid.amount);
+        $scope.bidForm.amount = $scope.maxBid.amount + 1;
+      } else {
+        $scope.addBid(bidTeam.$id, bidAmount);
+        $scope.bidForm.amount = '';
+      }
+
     };
 
     $scope.importPlayers = function() {};

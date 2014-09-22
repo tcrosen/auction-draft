@@ -8,18 +8,21 @@
         <h2 class="player-name">{{ currentAuction.player.name }} <small>{{ currentAuction.player.position }}, {{ currentAuction.player.team }}</small></h2>
         <p>Nominated by: <strong>{{ currentAuction.team.name }}</strong></p>
         <p>Highest bid: <strong>${{ maxBid.amount }}</strong> by <strong>{{ maxBid.team.name }}</strong></p>
-        <p><a href="" class="btn btn-success" ng-click="finishAuction()">Finish</a> <a href="" class="btn btn-default" ng-click="cancelAuction()">Cancel</a></p>
+        <p><a href="" class="btn btn-danger" ng-click="finishAuction()">Finish</a> <a href="" class="btn btn-default" ng-click="cancelAuction()">Cancel</a></p>
       </div>
       <div class="col-xs-12 col-sm-8 bid-actions">
+        <p>
+          Bidding as: <select ng-model="bidForm.team" ng-options="team.name for team in poolTeams"></select>
+        </p>
         <p>
           <span>Quick Bid:</span>
         </p>
         <p>
-          <a href="" ng-click="submitBid(quickBid)" ng-repeat="quickBid in quickBids()" class="btn btn-success btn-quick-bid">${{ quickBid }}</a>
+          <a href="" ng-click="submitBid(quickBid)" ng-repeat="quickBid in quickBids() track by quickBid" class="btn btn-success btn-quick-bid">${{ quickBid }}</a>
         </p>
         <div class="input-group">
           <span class="input-group-addon">$</span>
-          <input type="text" class="form-control" ng-model="user.bid">
+          <input type="text" class="form-control" ng-model="bidForm.amount" ng-bind="bidForm.amount">
           <span class="input-group-btn">
             <button class="btn btn-default" type="button" ng-click="submitBid()">Submit Bid</button>
           </span>

@@ -138,8 +138,6 @@ angular.module('clientApp')
     };
 
     $scope.finishAuction = function() {
-      $scope.currentAuction.endTime = now();
-
       var winningTeam = $scope.poolTeams.$getRecord($scope.currentAuction.$maxBid.teamId);
       var nominatingTeam = $scope.currentAuction.$team;
       var player = $scope.currentAuction.$player;
@@ -187,19 +185,22 @@ angular.module('clientApp')
       }
 
       $scope.poolTeams.$save(winningTeam).then(function() {
-        unwatchCurrentBids();
-        unwatchCurrentAuction();
+        $scope.currentAuction.endTime = now();
+        $scope.currentAuction.$save().then(function() {
+          unwatchCurrentBids();
+          unwatchCurrentAuction();
 
-        $timeout(function() {
-          // Draft order is 1 ahead of the auction index so we just pass the current team's order value
-          // to move to the next person
+          $timeout(function() {
+            // Draft order is 1 ahead of the auction index so we just pass the current team's order value
+            // to move to the next person
 
-          // If we've reached the end, go back to the start
-          if (nominatingTeam.draftOrder === $scope.poolTeams.length) {
-            $scope.startAuction(0);
-          } else {
-            $scope.startAuction(nominatingTeam.draftOrder);
-          }
+            // If we've reached the end, go back to the start
+            if (nominatingTeam.draftOrder === $scope.poolTeams.length) {
+              $scope.startAuction(0);
+            } else {
+              $scope.startAuction(nominatingTeam.draftOrder);
+            }
+          });
         });
       });
     };

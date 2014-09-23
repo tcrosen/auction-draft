@@ -29,11 +29,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="auction in auctions">
+            <tr ng-repeat="auction in auctions" ng-show="auction.playerId">
               <td><a href="" ng-click="getAuctionWithBids(auction.$id)">{{ auction.$id }}</a></td>
               <td>{{ auction.$player.name }}</td>
               <td>{{ auction.$team.name }}</td>
-              <td>${{ auction.$maxBid.amount }} ({{ auction.$maxBid.$team.name }})</td>
+              <td><span ng-show="auction.$maxBid && auction.endTime">${{ auction.$maxBid.amount }} ({{ auction.$maxBid.$team.name }})</span></td>
             </tr>
           </tbody>
         </table>

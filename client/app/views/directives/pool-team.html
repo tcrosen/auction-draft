@@ -10,7 +10,7 @@
     <tr ng-repeat="rosterSpot in team.roster track by $index" ng-class="{ 'inactive': !rosterSpot.isActive }">
       <th>{{ rosterSpot.position }}</th>
       <td>{{ rosterSpot.player.lastName }} <span class="text-muted">{{ rosterSpot.player.position }}</span></td>
-      <td align="right">{{ rosterSpot.cost | currency }}</td>
+      <td align="right">{{ rosterSpot.cost }}</td>
     </tr>
   </tbody>
 </table>

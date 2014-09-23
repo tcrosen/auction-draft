@@ -25,7 +25,7 @@
               <th>ID</th>
               <th>Player</th>
               <th>Nominated By</th>
-              <th>Winning Bid</th>
+              <th>Won By</th>
             </tr>
           </thead>
           <tbody>
@@ -33,7 +33,7 @@
               <td><a href="" ng-click="getAuctionWithBids(auction.$id)">{{ auction.$id }}</a></td>
               <td>{{ auction.$player.name }}</td>
               <td>{{ auction.$team.name }}</td>
-              <td><span ng-show="auction.$maxBid && auction.endTime">${{ auction.$maxBid.amount }} ({{ auction.$maxBid.$team.name }})</span></td>
+              <td><span ng-show="auction.$maxBid && auction.endTime">{{ auction.$maxBid.$team.name }} (${{ auction.$maxBid.amount }})</span></td>
             </tr>
           </tbody>
         </table>
@@ -80,13 +80,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-hide="hideDrafted && player.owner" ng-repeat="player in players.filtered track by player.$id" ng-class="{ success: player.highlight }">
+            <tr ng-hide="players.hideDrafted && player.$draftedBy" ng-repeat="player in players.filtered track by player.$id" ng-class="{ success: currentAuction.playerId === player.$id }">
               <td>{{ player.rank }}</td>
               <td>{{ player.lastName }}, {{ player.firstName }}</td>
               <td class="hidden-xs">{{ player.position }}</td>
               <td class="hidden-xs">{{ player.team }}</td>
-              <td><a class="btn btn-success btn-xs" href="" ng-if="currentAuction.startTime && (currentAuction.teamId === myTeam.$id || myTeam.isAdmin)" ng-click="nominatePlayer(player)">Nominate</a></td>
-              <td align="right">{{ player.cost | currency }}</td>
+              <td>
+                <a class="btn btn-success btn-xs" href="" ng-if="!player.$draftedBy && currentAuction.playerId !== player.$id && (currentAuction.teamId === myTeam.$id || myTeam.isAdmin)" ng-click="nominatePlayer(player)">Nominate</a>
+                {{ player.$draftedBy.name }}
+                <span class="text-muted" ng-show="currentAuction.playerId === player.$id">Auction in progress</span>
+              </td>
+              <td align="right">{{ player.$draftCost | currency }}</td>
             </tr>
           </tbody>
         </table>

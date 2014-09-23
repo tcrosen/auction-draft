@@ -46,6 +46,20 @@ angular.module('clientApp')
       return auction;
     };
 
+    var updateDraftedPlayers = function() {
+      _.each($scope.playersList, function(player) {
+        var playerAuction = _.find($scope.auctions, { playerId: player.$id });
+
+        if (playerAuction && playerAuction.endTime) {
+          player.$draftedBy = playerAuction.$maxBid.$team;
+          player.$draftCost = playerAuction.$maxBid.amount;
+        } else {
+          player.$draftedBy = null;
+          player.$draftCost = null;
+        }
+      });
+    };
+
     var parseBid = function(bid) {
       bid.$team = $scope.poolTeams.$getRecord(bid.teamId);
       return bid;
@@ -128,10 +142,13 @@ angular.module('clientApp')
 
     $scope.cancelAuction = function() {
       $scope.currentAuction.playerId = null;
+      $scope.currentAuction.$player = null;
+      $scope.currentAuction.$maxBid = null;
       $scope.currentAuction.$save();
 
       if (bidsSync) {
         bidsSync.$remove().then(function() {
+          updateDraftedPlayers();
           console.log('Auction cancelled');
         });
       }
@@ -317,7 +334,7 @@ angular.module('clientApp')
 
     $scope.filterPlayersByDrafted = function(players, isDrafted) {
       return _.filter(players, function(player) {
-        return player;
+        return isDrafted ? player.$draftedBy : !player.$draftedBy;
       });
     };
 
@@ -349,6 +366,7 @@ angular.module('clientApp')
 
     $scope.auctions.$watch(function(event) {
       _.map($scope.auctions, parseAuction);
+      updateDraftedPlayers();
     });
 
     $scope.poolTeams.$loaded().then(function(poolTeams) {

@@ -26,9 +26,9 @@ angular
     //   $rootScope.currentUser = user;
     // });
     //
-    $rootScope.$on('$firebaseSimpleLogin:logout', function(e) {
-      console.log('User logged out');
-    });
+    // $rootScope.$on('$firebaseSimpleLogin:logout', function(e) {
+    //   console.log('User logged out');
+    // });
 
     // $rootScope.$on('$routeChangeStart', function(e, o) {
     //   console.log('routeChangeStart: ', e, o);
@@ -42,10 +42,10 @@ angular
     //   console.error('routeChangeError: ', e, o, x);
     // });
 
-
-    ENV.poolsRef = ENV.firebaseRef.child('pools');
-    ENV.usersRef = ENV.firebaseRef.child('users');
-    ENV.playersRef = ENV.firebaseRef.child('players');
-
-    $rootScope.auth = loginService.init('/login');
+    //
+    // ENV.poolsRef = ENV.firebaseRef.child('pools');
+    // ENV.usersRef = ENV.firebaseRef.child('users');
+    // ENV.playersRef = ENV.firebaseRef.child('players');
+    //
+    // $rootScope.auth = loginService.init('/login');
   });

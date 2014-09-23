@@ -375,6 +375,8 @@ angular.module('clientApp')
 
       if ($routeParams.teamId) {
         $scope.myTeam = $scope.poolTeams.$getRecord($routeParams.teamId);
+        $scope.myTeam.isRegistered = true;
+        $scope.poolTeams.$save($scope.myTeam);
         console.log('My team: ', $scope.myTeam);
       }
     });

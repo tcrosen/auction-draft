@@ -382,6 +382,11 @@ angular.module('clientApp')
     });
 
     $scope.poolTeams.$watch(function(event) {
+      if ($scope.myTeam) {
+        if (!$scope.poolTeams.$getRecord($scope.myTeam.$id).isRegistered) {
+          $location.path('/');
+        }
+      }
       sortTeams();
     });
 
@@ -507,14 +512,14 @@ angular.module('clientApp')
       }, {
         email: '',
         name: 'Mike M.',
-        lastYearRank: 0,
+        lastYearRank: null,
         seasons: 0,
         isActive: true,
         isRegistered: false
       }, {
         email: '',
         name: 'Adrian',
-        lastYearRank: 0,
+        lastYearRank: null,
         seasons: 1,
         isActive: true,
         isRegistered: false

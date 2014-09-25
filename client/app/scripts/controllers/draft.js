@@ -209,7 +209,8 @@ angular.module('clientApp')
       var bid = {
         teamId: teamId,
         amount: amount,
-        time: now()
+        time: now(),
+        $priority: -amount
       };
 
       console.log('Adding bid: ', bid);
@@ -331,6 +332,7 @@ angular.module('clientApp')
 
     $scope.pool.$loaded().then(function(pool) {
       console.log('Pool loaded: ', pool);
+      $scope.poolOriginal = angular.copy(pool);
     });
 
     $scope.auctions.$loaded().then(function(auctions) {
@@ -344,6 +346,11 @@ angular.module('clientApp')
       $scope.auctions.$watch(function(event) {
         _.map($scope.auctions, parseAuction);
         updateDraftedPlayers();
+
+        if ($scope.pool.isDraftStarted && !$scope.poolOriginal.isDraftStarted) {
+          $scope.poolOriginal = $scope.pool;
+          setCurrentAuction($scope.getLatestAuctionKey());
+        }
       });
     });
 

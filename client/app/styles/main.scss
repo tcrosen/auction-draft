@@ -13,6 +13,10 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 body {
 }
 
+.container-fluid {
+  padding: 0;
+}
+
 .draft-board {
   width: 100%;
   font-size: 16px;
@@ -182,14 +186,24 @@ body {
   background-color: #fff;
 }
 
-.current-auction .panel-heading,
-.current-auction .panel-body {
-  text-align: center;
-}
+// .current-auction .panel-heading,
+// .current-auction .panel-body {
+//   text-align: center;
+// }
 
 .current-auction .panel-heading,
 .current-auction .panel-footer {
   font-weight: normal;
+}
+
+.current-auction .auction-bid-form-title {
+  font-weight: bold;
+  padding: 8px;
+}
+
+.current-auction .auction-bids tbody > tr:first-child td {
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .current-auction .panel-title {
@@ -206,4 +220,8 @@ body {
 .pool-team tbody tr.inactive th {
   color: #ddd;
   text-decoration: line-through;
+}
+
+.align-right {
+  text-align: right;
 }

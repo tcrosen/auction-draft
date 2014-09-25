@@ -34,11 +34,11 @@ angular.module('clientApp').directive('draftOrder', function($rootScope) {
 
           team.maxBid = team.cash - (team.roster.length - team.drafted - 1);
 
-          console.log('Cash: ', team.cash);
-          console.log('Roster size: ', team.roster.length);
-          console.log('Drafted: ', team.drafted);
-          console.log('Remaining: ', team.roster.length - team.drafted);
-          console.log('Max bid: ', team.maxBid);
+          // console.log('Cash: ', team.cash);
+          // console.log('Roster size: ', team.roster.length);
+          // console.log('Drafted: ', team.drafted);
+          // console.log('Remaining: ', team.roster.length - team.drafted);
+          // console.log('Max bid: ', team.maxBid);
         });
 
         sortTeams();

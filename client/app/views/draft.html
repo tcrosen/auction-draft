@@ -11,90 +11,53 @@
     <div draft-order pool-teams="poolTeams" current-auction="currentAuction" show-rosters="false" pool="pool"></div>
   </div>
 </div>
-
-<div class="row" ng-if="myTeam.isAdmin">
-  <div class="col-xs-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Auctions</h3>
-      </div>
-      <div class="panel-body">
-        <table class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Player</th>
-              <th>Nominated By</th>
-              <th>Won By</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="auction in auctions" ng-show="auction.playerId">
-              <td><a href="" ng-click="getAuctionWithBids(auction.$id)">{{ auction.$id }}</a></td>
-              <td>{{ auction.$player.name }}</td>
-              <td>{{ auction.$team.name }}</td>
-              <td><span ng-show="auction.$maxBid && auction.endTime">{{ auction.$maxBid.$team.name }} (${{ auction.$maxBid.amount }})</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
+<hr>
 <div class="row">
   <div class="col-xs-12 col-md-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">All Players</h3>
-      </div>
-      <div class="panel-body">
-        <p>
-          <label class="checkbox-inline">
-            <input type="checkbox" id="hideDrafted" ng-model="players.hideDrafted" ng-click="hideDrafted()">Hide drafted
-          </label>
-        </p>
-        <ul class="nav nav-tabs player-filters" role="tablist">
-          <li ng-class="{ active: !players.filter }"><a href="" ng-click="filterPlayers()">All <span class="label label-default">{{ draftStats().remaining.total }}</a>
-          </li>
-          <li ng-class="{ active: players.filter === 'C' }"><a href="" ng-click="filterPlayers('C')">C <span class="label label-default">{{ draftStats().remaining.c }}</a>
-          </li>
-          <li ng-class="{ active: players.filter === 'RW' }"><a href="" ng-click="filterPlayers('RW')">RW <span class="label label-default">{{ draftStats().remaining.rw }}</a>
-          </li>
-          <li ng-class="{ active: players.filter === 'LW' }"><a href="" ng-click="filterPlayers('LW')">LW <span class="label label-default">{{ draftStats().remaining.lw }}</a>
-          </li>
-          <li ng-class="{ active: players.filter === 'D' }"><a href="" ng-click="filterPlayers('D')">D <span class="label label-default">{{ draftStats().remaining.d }}</a>
-          </li>
-          <li ng-class="{ active: players.filter === 'G' }"><a href="" ng-click="filterPlayers('G')">G <span class="label label-default">{{ draftStats().remaining.g }}</a>
-          </li>
-        </ul>
-        <table class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Name</th>
-              <th class="hidden-xs">Position</th>
-              <th class="hidden-xs">Team</th>
-              <th>Owner</th>
-              <th>Cost</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-hide="players.hideDrafted && player.$draftedBy" ng-repeat="player in players.filtered track by player.$id" ng-class="{ success: currentAuction.playerId === player.$id }">
-              <td>{{ player.rank }}</td>
-              <td>{{ player.lastName }}, {{ player.firstName }}</td>
-              <td class="hidden-xs">{{ player.position }}</td>
-              <td class="hidden-xs">{{ player.team }}</td>
-              <td>
-                <a class="btn btn-success btn-xs" href="" ng-if="!player.$draftedBy && currentAuction.playerId !== player.$id && (currentAuction.teamId === myTeam.$id || myTeam.isAdmin)" ng-click="nominatePlayer(player)">Nominate</a>
-                {{ player.$draftedBy.name }}
-                <span class="text-muted" ng-show="currentAuction.playerId === player.$id">Auction in progress</span>
-              </td>
-              <td align="right">{{ player.$draftCost | currency }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <p>
+      <label class="checkbox-inline">
+        <input type="checkbox" id="hideDrafted" ng-model="players.hideDrafted" ng-click="hideDrafted()">Hide drafted
+      </label>
+    </p>
+    <ul class="nav nav-tabs player-filters" role="tablist">
+      <li ng-class="{ active: !players.filter }"><a href="" ng-click="filterPlayers()">All <span class="label label-default">{{ draftStats().remaining.total }}</a>
+      </li>
+      <li ng-class="{ active: players.filter === 'C' }"><a href="" ng-click="filterPlayers('C')">C <span class="label label-default">{{ draftStats().remaining.c }}</a>
+      </li>
+      <li ng-class="{ active: players.filter === 'RW' }"><a href="" ng-click="filterPlayers('RW')">RW <span class="label label-default">{{ draftStats().remaining.rw }}</a>
+      </li>
+      <li ng-class="{ active: players.filter === 'LW' }"><a href="" ng-click="filterPlayers('LW')">LW <span class="label label-default">{{ draftStats().remaining.lw }}</a>
+      </li>
+      <li ng-class="{ active: players.filter === 'D' }"><a href="" ng-click="filterPlayers('D')">D <span class="label label-default">{{ draftStats().remaining.d }}</a>
+      </li>
+      <li ng-class="{ active: players.filter === 'G' }"><a href="" ng-click="filterPlayers('G')">G <span class="label label-default">{{ draftStats().remaining.g }}</a>
+      </li>
+    </ul>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th class="hidden-xs">Position</th>
+          <th class="hidden-xs">Team</th>
+          <th ng-show="pool.isDraftStarted">Owner</th>
+          <th ng-show="pool.isDraftStarted">Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-hide="players.hideDrafted && player.$draftedBy" ng-repeat="player in players.filtered track by player.$id" ng-class="{ success: currentAuction.playerId === player.$id }">
+          <td>{{ player.rank }}</td>
+          <td>{{ player.lastName }}, {{ player.firstName }}</td>
+          <td class="hidden-xs">{{ player.position }}</td>
+          <td class="hidden-xs">{{ player.team }}</td>
+          <td ng-show="pool.isDraftStarted">
+            <a class="btn btn-success btn-xs" href="" ng-if="!player.$draftedBy && currentAuction.playerId !== player.$id && (currentAuction.teamId === myTeam.$id || myTeam.isAdmin)" ng-click="nominatePlayer(player)">Nominate</a>
+            {{ player.$draftedBy.name }}
+            <span class="text-muted" ng-show="currentAuction.playerId === player.$id">Auction in progress</span>
+          </td>
+          <td ng-show="pool.isDraftStarted" align="right">{{ player.$draftCost | currency }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

@@ -1,13 +1,20 @@
 'use strict';
 
-angular.module('clientApp').factory('PlayerService', function($http, ENV, firebaseRef, syncData) {
+angular.module('clientApp').factory('PlayerService', function($http, ENV) {
   var playerService = {};
 
-  playerService.ref = firebaseRef('players');
-  playerService.syncData = syncData('players').$asArray();
+  playerService.ref = ENV.playersRef;
+  playerService.syncData = ENV.playersSync.$asArray();
 
   playerService.getSeedData = function() {
-    return $http.get('/data/players.json').then(function(resp) {
+    // return $http.get('/data/players.json').then(function(resp) {
+    //   console.log('Players data:', resp.data);
+    //   return resp.data;
+    // });
+
+    return $http.jsonp('https://www.kimonolabs.com/api/24yxvxeo?apikey=abe6b22285a4d123b8d3ed875ac78331&callback=JSON_CALLBACK', {
+      crossDomain: true
+    }).then(function(resp) {
       console.log('Players data:', resp.data);
       return resp.data;
     });
@@ -51,6 +58,21 @@ angular.module('clientApp').factory('PlayerService', function($http, ENV, fireba
       return isDrafted ? player.owner : !player.owner;
     });
   };
+
+  playerService.players = {};
+
+  playerService.syncData.$loaded().then(function(players) {
+    console.log('Players loaded: ', players);
+
+    angular.extend(playerService.players, {
+      all: players,
+      filtered: players,
+      filter: null,
+      hideDrafted: false,
+      sort: 'rank',
+      reverse: false
+    });
+  });
 
   return playerService;
 });

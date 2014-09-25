@@ -276,14 +276,14 @@ angular.module('clientApp')
         if (maxBid.amount < 50) {
           for (i = 1; i <= 9; i++) {
             qb = maxBid.amount + i;
-            if ($scope.myTeam && $scope.myTeam.$maxBid <= qb) {
+            if ($scope.myTeam && $scope.myTeam.maxBid >= qb) {
               quickBids.push(qb);
             }
           }
         } else if (maxBid.amount >= 50) {
           for (i = 1; i <= 9; i++) {
             qb = maxBid.amount + i * 5;
-            if ($scope.myTeam && $scope.myTeam.$maxBid <= qb) {
+            if ($scope.myTeam && $scope.myTeam.maxBid >= qb) {
               quickBids.push(qb);
             }
           }
@@ -310,9 +310,9 @@ angular.module('clientApp')
       if (bidAmount <= $scope.currentAuction.$maxBid.amount) {
         alert('Bid must be greater than ' + $scope.currentAuction.$maxBid.amount);
         $scope.bidForm.amount = $scope.currentAuction.$maxBid.amount + 1;
-      } else if (bidAmount > bidTeam.$maxBid) {
-        alert('Your max bid is ' + bidTeam.$maxBid);
-        $scope.bidForm.amount = bidTeam.$maxBid;
+      } else if (bidAmount > bidTeam.maxBid) {
+        alert('Your max bid is ' + bidTeam.maxBid);
+        $scope.bidForm.amount = bidTeam.maxBid;
       } else {
         $scope.addBid(bidTeamId, bidAmount);
         $scope.bidForm.amount = '';

@@ -36,7 +36,7 @@ angular.module('clientApp')
     };
 
     var parseAuction = function(auction) {
-      console.log('Parsing auction ', auction);
+      //console.log('Parsing auction ', auction);
 
       auction.$team = $scope.poolTeams.$getRecord(auction.teamId);
       auction.$player = auction.playerId ? $scope.playersList.$getRecord(auction.playerId) : null;
@@ -66,7 +66,7 @@ angular.module('clientApp')
     };
 
     var parseBids = function(bids) {
-      console.log('Parsing bids ', bids);
+      //console.log('Parsing bids ', bids);
       return _.map(bids, parseBid);
     };
 
@@ -352,6 +352,11 @@ angular.module('clientApp')
       $location.path('/pools/' + $scope.pool.$id + '/draft/' + $scope.myTeam.$id);
     };
 
+    $scope.undoAuction = function(auctionId) {
+      var auction = $scope.auctions.$getRecord(auctionId);
+      console.log('Undoing auction ', auction);
+    };
+
     $scope.pool.$loaded().then(function(pool) {
       console.log('Pool loaded: ', pool);
     });
@@ -383,11 +388,11 @@ angular.module('clientApp')
 
     $scope.poolTeams.$watch(function(event) {
       if ($scope.myTeam) {
-        if (!$scope.poolTeams.$getRecord($scope.myTeam.$id).isRegistered) {
+        if ($scope.poolTeams.$getRecord($scope.myTeam.$id) &&
+            !$scope.poolTeams.$getRecord($scope.myTeam.$id).isRegistered) {
           $location.path('/');
         }
       }
-      sortTeams();
     });
 
     $scope.playersList.$loaded().then(function(players) {
@@ -454,9 +459,9 @@ angular.module('clientApp')
         isAdmin: true
       }, {
         email: '',
-        name: 'Kyle',
-        lastYearRank: 5,
-        seasons: 3,
+        name: 'Jamie',
+        lastYearRank: null,
+        seasons: 4,
         isActive: true,
         isRegistered: false
       }, {
@@ -508,13 +513,6 @@ angular.module('clientApp')
         lastYearRank: 12,
         seasons: 2,
         isActive: false,
-        isRegistered: false
-      }, {
-        email: '',
-        name: 'Mike M.',
-        lastYearRank: null,
-        seasons: 0,
-        isActive: true,
         isRegistered: false
       }, {
         email: '',

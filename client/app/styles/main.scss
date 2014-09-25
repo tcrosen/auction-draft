@@ -10,10 +10,72 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
   padding: 0.2em 0;
 }
 
-/* Space out content a bit */
 body {
-  padding-top: 20px;
-  padding-bottom: 20px;
+}
+
+.draft-board {
+  width: 100%;
+  font-size: 16px;
+}
+
+.draft-board .draft-order {
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+
+.draft-board .draft-order > li {
+  margin: 0;
+  padding-top: 6px;
+  float: left;
+  width: 18%;
+  margin-right: 30px;
+}
+
+.draft-board .draft-order .draft-index {
+  display: none;
+}
+
+.draft-board .draft-order .team-name {
+  font-size: 30px;
+  line-height: 40px;
+  float: left;
+  width: 50%;
+  font-weight: 700;
+  padding: 5px 0 5px 8px;
+  text-align: left;
+}
+
+.draft-board .draft-order .cash-left {
+  font-size: 26px;
+  width: 50%;
+  text-align: right;
+  padding: 5px 8px 5px 0;
+}
+
+.draft-order .max-bid {
+  color: #666;
+}
+
+.draft-order .max-bid.bad {
+  color: red;
+}
+
+.draft-order .text-muted {
+  color: #ddd;
+}
+
+.draft-board .pool-team tbody td,
+.draft-board .pool-team tbody th {
+  padding: 2px 3px;
+  font-weight: normal;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.draft-board .pool-team tbody td .player-position {
+  font-size: 12px;
+  color: #888;
 }
 
 .draft-order {
@@ -28,20 +90,29 @@ body {
   display: table-cell;
   border-top: 0;
   border-bottom: 0;
-  border: 3px solid #fff;
+  text-align: center;
+  // border: 3px solid #fff;
+}
+
+.draft-order .cash-left {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  float: left;
+  font-weight: normal;
+  text-align: center;
+  color: green;
 }
 
 .draft-order > li:first-child {
 }
 
-.draft-order > li table.pool-team {
-  margin: 0;
+.draft-order > li .pool-team {
 }
 
 .draft-order > li .team-name {
   margin: 0;
   padding: 8px 0;
-  background-color: #eee;
   text-align: center;
   font-weight: normal;
 }
@@ -70,6 +141,10 @@ body {
 
 .draft-order > li.nominating-team .team-name small {
   color: #ddd;
+}
+
+.pool-team tbody td.number {
+  text-align: right;
 }
 
 .player-filters {

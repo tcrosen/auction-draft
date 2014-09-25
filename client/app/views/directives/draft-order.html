@@ -1,6 +1,8 @@
 <ul class="draft-order">
   <li ng-repeat="poolTeam in poolTeams track by poolTeam.$id" ng-class="{ 'nominating-team': currentAuction.teamId === poolTeam.$id }">
-    <h4 class="team-name">{{ poolTeam.draftOrder }}. {{ poolTeam.name }}</h4>
-    <div pool-team team="poolTeam" condensed="true" showHeader="false"></div>
+    <div class="draft-index">{{ poolTeam.draftOrder }}</div>
+    <div class="team-name">{{ poolTeam.name }}</div>
+    <div class="cash-left">${{ poolTeam.cash }}  <span class="text-muted">/</span> <span class="max-bid" ng-class="{ bad: poolTeam.maxBid < 5 }">${{ poolTeam.maxBid }}</span></div>    
+    <div ng-if="showRosters" pool-team team="poolTeam" condensed="true" showHeader="false"></div>
   </li>
 </ul>

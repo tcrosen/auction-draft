@@ -22,9 +22,9 @@ angular.module('clientApp')
     $scope.poolTeams = poolTeamsSync.$asArray();
 
     $scope.claimTeam = function(team) {
-      if (!team.isRegistered) {
+      //if (!team.isRegistered) {
         $location.path('/pools/' + $scope.pool.$id + '/draft/' + team.$id);
-      }
+      //}
     };
 
     $scope.poolTeams.$watch(function() {

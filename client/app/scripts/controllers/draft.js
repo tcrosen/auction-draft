@@ -3,20 +3,7 @@
 angular.module('clientApp')
   .controller('DraftCtrl', function($scope, $rootScope, $location, $routeParams, $timeout, ENV, $firebase) {
 
-    var baseRef = ENV.firebaseRef,
-      poolsRef = baseRef.child('pools'),
-      poolsSync = $firebase(poolsRef),
-      poolRef = poolsRef.child('-JWfYHPR-7z28GrRKaRv'),
-      poolSync = $firebase(poolRef),
-      poolTeamsRef = baseRef.child('poolTeams'),
-      poolTeamsSync = $firebase(poolTeamsRef),
-      playersRef = baseRef.child('players'),
-      playersSync = $firebase(playersRef),
-      usersRef = baseRef.child('users'),
-      usersSync = $firebase(usersRef),
-      auctionsRef = baseRef.child('auctions'),
-      auctionsSync = $firebase(auctionsRef),
-      auctionRef,
+    var auctionRef,
       auctionSync,
       bidsRef,
       bidsSync,
@@ -71,7 +58,7 @@ angular.module('clientApp')
     };
 
     var setCurrentAuction = function(auctionId) {
-      auctionRef = auctionsRef.child(auctionId);
+      auctionRef = ENV.auctionsRef.child(auctionId);
       auctionSync = $firebase(auctionRef);
       bidsRef = auctionRef.child('bids');
       bidsSync = $firebase(bidsRef);
@@ -89,17 +76,17 @@ angular.module('clientApp')
     };
 
     // $scope bindings
-    $scope.pool = poolSync.$asObject();
-    $scope.playersList = playersSync.$asArray();
-    $scope.poolTeams = poolTeamsSync.$asArray();
-    $scope.auctions = auctionsSync.$asArray();
+    $scope.pool = ENV.poolSync.$asObject();
+    $scope.playersList = ENV.playersSync.$asArray();
+    $scope.poolTeams = ENV.poolTeamsSync.$asArray();
+    $scope.auctions = ENV.auctionsSync.$asArray();
     $scope.moment = moment;
     $scope.bidForm = {
       team: $routeParams.teamId
     };
 
     $scope.getAuctionWithBids = function(auctionId) {
-      var thisAuctionRef = auctionsRef.child(auctionId),
+      var thisAuctionRef = ENV.auctionsRef.child(auctionId),
           thisAuction = $firebase(thisAuctionRef).$asObject(),
           thisBidsRef = thisAuctionRef.child('bids'),
           thisBids = $firebase(thisBidsRef).$asArray();
@@ -112,7 +99,7 @@ angular.module('clientApp')
     };
 
     $scope.getBid = function(auctionId, bidId) {
-      var thisAuctionRef = auctionsRef.child(auctionId),
+      var thisAuctionRef = ENV.auctionsRef.child(auctionId),
           thisAuction = $firebase(thisAuctionRef).$asObject(),
           thisBidRef = thisAuctionRef.child('bids').child(bidId),
           thisBid = $firebase(thisBidRef).$asObject();
@@ -258,7 +245,7 @@ angular.module('clientApp')
 
         $scope.seedTeams();
 
-        auctionsSync.$remove().then(function() {
+        ENV.auctionsSync.$remove().then(function() {
           console.log('Auctions deleted');
 
           if ($routeParams.teamId) {
@@ -525,7 +512,7 @@ angular.module('clientApp')
         isRegistered: false
       }];
 
-      poolTeamsSync.$remove().then(function() {
+      ENV.poolTeamsSync.$remove().then(function() {
         var draftIndex = 1;
         _.each(_.shuffle(teams), function(team) {
           if (team.isActive) {
@@ -542,7 +529,7 @@ angular.module('clientApp')
               });
             });
 
-            poolTeamsSync.$push(team);
+            ENV.poolTeamsSync.$push(team);
             draftIndex++;
 
             if ($routeParams.teamId) {

@@ -19,7 +19,7 @@ angular
     'firebase',
     'ui.bootstrap'
   ])
-  .run(function() {
+  .run(function(ENV, $firebase) {
     // $rootScope.$on('$firebaseSimpleLogin:login', function(e, user) {
     //   console.log('User logged in: ', user);
     //   $rootScope.currentUser = user;
@@ -47,4 +47,17 @@ angular
     // ENV.playersRef = ENV.firebaseRef.child('players');
     //
     // $rootScope.auth = loginService.init('/login');
+
+    ENV.poolsRef = ENV.firebaseRef.child('pools');
+    ENV.poolsSync = $firebase(ENV.poolsRef);
+    ENV.poolRef = ENV.poolsRef.child('-JWfYHPR-7z28GrRKaRv');
+    ENV.poolSync = $firebase(ENV.poolRef);
+    ENV.poolTeamsRef = ENV.firebaseRef.child('poolTeams');
+    ENV.poolTeamsSync = $firebase(ENV.poolTeamsRef);
+    ENV.playersRef = ENV.firebaseRef.child('players');
+    ENV.playersSync = $firebase(ENV.playersRef);
+    ENV.usersRef = ENV.firebaseRef.child('users');
+    ENV.usersSync = $firebase(ENV.usersRef);
+    ENV.auctionsRef = ENV.firebaseRef.child('auctions');
+    ENV.auctionsSync = $firebase(ENV.auctionsRef);
   });
